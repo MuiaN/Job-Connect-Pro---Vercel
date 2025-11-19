@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
 /**
  * GET /api/notifications
  * Fetches all notifications for the currently authenticated user.
  */
-export async function GET(req: Request) {
+export async function GET() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session) { // 'req' is defined but never used.
     return new NextResponse("Unauthorized", { status: 401 });
   }
 

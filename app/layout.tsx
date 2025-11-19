@@ -1,11 +1,14 @@
-import type { Metadata } from "next"
+
 import { Inter } from "next/font/google"
+
 import "./globals.css"
 import { Providers } from "@/components/providers"
 import { ThemeProvider } from "@/components/providers/theme-provider"
-import { DashboardProvider } from "@/context/DashboardContext"
-import { ConversationProvider } from "@/context/ConversationContext"
 import { GlobalCandidateDialog } from "@/components/ui/global-candidate-dialog"
+import { ConversationProvider } from "@/context/ConversationContext"
+import { DashboardProvider } from "@/context/DashboardContext"
+
+import type { Metadata } from "next"
 
 const inter = Inter({ 
   subsets: ["latin"],

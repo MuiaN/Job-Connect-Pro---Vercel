@@ -1,13 +1,14 @@
+import { JobStatus, ExperienceLevel, EmploymentType, RemotePreference, SkillLevel } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
+import { z } from 'zod';
+
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
-import { JobStatus, ExperienceLevel, EmploymentType, RemotePreference, SkillLevel } from '@prisma/client';
 
 export const dynamic = "force-dynamic"; // Ensures the route is always dynamic
 
-const emptyStringToUndefined = z.literal('').transform(() => undefined);
+// const emptyStringToUndefined = z.literal('').transform(() => undefined);
 
 const jobUpdateSchema = z.object({
   title: z.string().min(1, "Title is required"),

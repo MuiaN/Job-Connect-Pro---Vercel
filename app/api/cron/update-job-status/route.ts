@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { JobStatus } from "@prisma/client";
+import { NextResponse } from "next/server";
+
+import { prisma } from "@/lib/prisma";
 
 /**
  * This endpoint is designed to be called by a cron job.

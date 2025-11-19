@@ -1,41 +1,35 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
-import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import {
+  ArrowLeft,
+  Bell,
+  Briefcase,
+  Building,
+  Calendar,
+  FileText,
+  LogOut,
+  MessageSquare,
+  Search,
+  Plus,
+} from "lucide-react"
+import { Users } from "lucide-react"
+import { User } from "lucide-react"
 import Link from "next/link"
-import { useRouter, usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import {
-  Users,
-  MessageSquare,
-  Calendar,
-  User,
-  Settings,
-  LogOut,
-  Bell,
-  ArrowLeft,
-  Search,
-  Briefcase,
-  FileText,
-  Building,
-  Plus,
-  MailPlus
-} from "lucide-react"
-import { motion } from "framer-motion"
 import { useDashboard } from "@/context/DashboardContext"
-import type { Company, JobSeeker, Notification } from "@prisma/client"
 
+import type { Company, Notification } from "@prisma/client"
 interface DashboardNavProps {
   userType: "job_seeker" | "company"
 }

@@ -1,9 +1,10 @@
 'use client'
 
-import { Target, Globe, Heart, Zap } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Globe, Heart, Target, Zap } from 'lucide-react'
+
 import { Navbar } from '@/components/navigation/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 type PageHeaderProps = {
   badge: string

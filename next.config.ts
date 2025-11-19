@@ -4,9 +4,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
 
   // Prisma configuration
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  serverExternalPackages: ['@prisma/client'],
 };
 
 export default nextConfig;

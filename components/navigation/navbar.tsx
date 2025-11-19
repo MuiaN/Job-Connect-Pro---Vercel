@@ -1,19 +1,13 @@
 "use client"
 
+import { Building2, Briefcase, Calendar, FileText, Menu, MessageSquare, Search, User, Users, X } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { Users, Menu, X, Briefcase, User, MessageSquare, Calendar, FileText, Building2, Search } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
 
 export function Navbar() {
   const pathname = usePathname()

@@ -1,34 +1,35 @@
 'use client'
 
-import { useSession } from "next-auth/react"
-import type { JobSeeker, Skill, Company, Application, Job, User, Experience, Education } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState, useMemo, useCallback } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScheduleInterviewDialog } from "@/components/ui/schedule-interview-dialog"
-import { SchedulableCandidatesDialog } from "@/components/ui/schedulable-candidates-dialog"
-import { PastInterviewReportDialog } from "@/components/ui/past-interview-report-dialog"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { SkeletonList } from "@/components/ui/skeleton"
+import { formatDistanceToNow } from 'date-fns'
 import {
-  Calendar,
-  Clock,
-  MapPin,
-  Video,
-  Phone,
-  User as UserIcon,
-  CheckCircle,
-  XCircle,
   AlertCircle,
-  ExternalLink,
-  Plus,
+  Calendar,
+  CheckCircle,
+  Clock,
   Edit,
+  ExternalLink,
+  MapPin,
+  Phone,
+  Plus,
+  Video,
+  XCircle
 } from "lucide-react"
-import { formatDistanceToNow } from 'date-fns';
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { PastInterviewReportDialog } from "@/components/ui/past-interview-report-dialog"
+import { SchedulableCandidatesDialog } from "@/components/ui/schedulable-candidates-dialog"
+import { ScheduleInterviewDialog } from "@/components/ui/schedule-interview-dialog"
+import { SkeletonList } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import type { Application, Education, Experience, Job, JobSeeker, Skill, User } from "@prisma/client"
 
 type Interview = {
   id: string;
@@ -69,11 +70,7 @@ type ApplicationWithRelations = Application & {
   };
 };
 
-interface CompanyInterviewsProps {
-  showNav?: boolean;
-}
-
-export default function CompanyInterviews({ showNav = true }: CompanyInterviewsProps) {
+export default function CompanyInterviews() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [interviews, setInterviews] = useState<Interview[]>([]);
@@ -208,7 +205,6 @@ export default function CompanyInterviews({ showNav = true }: CompanyInterviewsP
   const handleReschedule = (interview: Interview) => {
     // We need to construct an `ApplicationWithRelations` object to pass to the dialog
     // This ensures the dialog has the necessary info like candidate name and job title.
-    const { id: interviewId, ...restOfInterview } = interview;
     const mockApplication: ApplicationWithRelations = {
       id: interview.application?.id || 'mock-app-id',
       jobId: interview.application?.job?.id || 'unknown',
@@ -306,7 +302,7 @@ export default function CompanyInterviews({ showNav = true }: CompanyInterviewsP
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950">
-      {showNav && <DashboardNav userType="company" />}
+      <DashboardNav userType="company" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex items-center justify-between">

@@ -1,17 +1,25 @@
 "use client"
 
-import { Job, JobSkill, Skill, Application, JobSeeker, User, Experience, Education } from "@prisma/client"
+import {
+  Briefcase,
+  Calendar,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Edit,
+  Eye,
+  MapPin,
+  Plus,
+  Trash2,
+  Users,
+} from "lucide-react"
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Skeleton, SkeletonList } from "@/components/ui/skeleton"
+import { Suspense, useEffect, useState } from "react"
+import { toast } from "sonner"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,27 +31,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { CandidateProfileDialog } from "@/components/ui/candidate-profile-dialog"
+import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { toast } from "sonner"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { CandidateProfileDialog } from "@/components/ui/candidate-profile-dialog"
-import { 
-  Plus, 
-  MapPin,
-  DollarSign,
-  Users,
-  Eye,
-  Edit,
-  Trash2,
-  Briefcase,
-  Calendar,
-  Clock,
-  CheckCircle,
-} from "lucide-react"
-import { useDashboard } from "@/context/DashboardContext"
+import { Skeleton, SkeletonList } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useConversation } from "@/context/ConversationContext"
+import { useDashboard } from "@/context/DashboardContext"
+
+import type { Application, Education, Experience, Job, JobSeeker, JobSkill, Skill, User } from "@prisma/client"
 
 type JobWithRelations = Job & {
   skills: (JobSkill & { skill: Skill })[];
@@ -62,11 +64,7 @@ type ApplicationWithRelations = Application & {
   };
 };
 
-interface CompanyJobsProps {
-  showNav?: boolean;
-}
-
-export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
+function CompanyJobsContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [jobs, setJobs] = useState<JobWithRelations[]>([])
@@ -150,7 +148,7 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
     };
 
     fetchJobs();
-  }, [session, status, router]) // searchParams is stable, no need to add it here
+  }, [session, status, router, searchParams])
 
   const handleViewApplications = async (job: JobWithRelations) => {
     setSelectedJob(job);
@@ -196,6 +194,7 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
         toast.success(`Job successfully moved to ${newStatus.toLowerCase()}!`);
       }
     } catch (error) {
+      console.error("Error updating job status:", error);
       setJobs(originalJobs);
       toast.error("An error occurred while updating job status.");
     }
@@ -274,19 +273,6 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
     }
   }
 
-  const getRemoteBadge = (remote: string) => {
-    switch (remote.toUpperCase()) {
-      case "REMOTE":
-        return <Badge variant="outline" className="text-blue-600 border-blue-200">Remote</Badge>
-      case "HYBRID":
-        return <Badge variant="outline" className="text-purple-600 border-purple-200">Hybrid</Badge>
-      case "ONSITE":
-        return <Badge variant="outline" className="text-gray-600 border-gray-200">On-site</Badge>
-      default:
-        return <Badge variant="outline">{remote}</Badge>
-    }
-  }
-
   const getSkillBadge = (skillName: string) => {
     return (
       <Badge
@@ -311,7 +297,7 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950">
-      {showNav && <DashboardNav userType="company" />}
+      <DashboardNav userType="company" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex items-center justify-between">
@@ -424,7 +410,7 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Are you sure you want to close this job?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This will move the job to the "Closed" tab and it will no longer be visible to candidates.
+                                    This will move the job to the &apos;Closed&apos; tab and it will no longer be visible to candidates.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -542,9 +528,9 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you sure you want to close this draft?</AlertDialogTitle>
+                                  <AlertDialogTitle>Are you sure you want to delete this draft?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This will move the job to the "Closed" tab. This action cannot be undone.
+                                    This will permanently delete the draft. This action can&apos;t be undone.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -784,5 +770,25 @@ export default function CompanyJobs({ showNav = true }: CompanyJobsProps) {
       />
       </>
     </div>
+  )
+}
+
+function JobsPageLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950">
+      <DashboardNav userType="company" />
+      <main className="container mx-auto px-4 py-8">
+        <SkeletonList count={4} />
+      </main>
+    </div>
+  )
+}
+
+export default function CompanyJobsPage() {
+  return (
+    // The Suspense boundary is the key to fixing the build error.
+    <Suspense fallback={<JobsPageLoading />}>
+      <CompanyJobsContent />
+    </Suspense>
   )
 }

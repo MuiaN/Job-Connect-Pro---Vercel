@@ -1,6 +1,9 @@
 "use client"
 
-import type { Job, JobSkill, Skill, Application, JobSeeker, User, Experience, Education } from "@prisma/client"
+import { Calendar, Eye, Users } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,10 +12,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SkeletonList } from "@/components/ui/skeleton"
-import { Eye, Calendar, Users } from "lucide-react"
+
+import type { Application, Education, Experience, Job, JobSeeker, JobSkill, Skill, User } from "@prisma/client"
 
 type JobWithRelations = Job & {
   skills: (JobSkill & { skill: Skill })[];

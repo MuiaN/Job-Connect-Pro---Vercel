@@ -1,9 +1,10 @@
+import bcrypt from "bcryptjs"
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import bcrypt from "bcryptjs"
-import { prisma } from "./prisma"
 
+
+import { prisma } from "./prisma"
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -53,8 +54,8 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
+    async jwt({ token, user }) {
+      if (user) { 
         token.id = user.id
         token.role = user.role
       }

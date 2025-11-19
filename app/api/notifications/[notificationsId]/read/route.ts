@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next"
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -9,7 +10,7 @@ import { prisma } from "@/lib/prisma";
  */
 export async function PATCH(
   req: Request,
-  { params }: { params: { notificationId: string } }
+  context: { params: Promise<{ notificationsId: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -18,9 +19,11 @@ export async function PATCH(
   }
 
   try {
+    const params = await context.params;
+
     await prisma.notification.updateMany({
       where: {
-        id: params.notificationId,
+        id: params.notificationsId,
         userId: session.user.id, // Ensure user can only update their own notifications
       },
       data: {

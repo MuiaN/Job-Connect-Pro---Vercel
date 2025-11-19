@@ -1,12 +1,18 @@
+import { ApplicationStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { ApplicationStatus } from "@prisma/client";
+
+const updateStatusSchema = z.object({
+  status: z.nativeEnum(ApplicationStatus),
+});
 
 export async function PUT(
   req: Request,
-  { params }: { params: { applicationId: string } }
+  context: { params: Promise<{ applicationId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,47 +20,31 @@ export async function PUT(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { status } = (await req.json()) as { status: ApplicationStatus };
+    const params = await context.params;
 
-    if (!status || !Object.values(ApplicationStatus).includes(status)) {
+    const body = await req.json();
+    const validation = updateStatusSchema.safeParse(body);
+
+    if (!validation.success) {
       return new NextResponse("Invalid status provided", { status: 400 });
     }
 
-    const company = await prisma.company.findUnique({
-      where: { userId: session.user.id },
-      select: { id: true },
-    });
-
-    if (!company) {
-      return new NextResponse("Company not found", { status: 404 });
-    }
-
-    // First, verify the application exists and belongs to the company
-    const application = await prisma.application.findFirst({
-      where: {
-        id: params.applicationId,
-        companyId: company.id,
-      },
-    });
-
-    if (!application) {
-      return new NextResponse(
-        "Application not found or you do not have permission to update it",
-        { status: 404 }
-      );
-    }
+    const { status } = validation.data;
 
     const updatedApplication = await prisma.application.update({
       where: {
         id: params.applicationId,
-        companyId: company.id, // Ensure the company owns this application
+        // Ensure the company owns this application by checking its user ID
+        company: {
+          userId: session.user.id,
+        },
       },
       data: {
         status: status,
       },
       include: {
         job: { select: { title: true } },
-        jobSeeker: { include: { user: { select: { id: true } } } },
+        jobSeeker: { select: { user: { select: { id: true } } } },
       },
     });
 
@@ -63,11 +53,9 @@ export async function PUT(
       data: {
         userId: updatedApplication.jobSeeker.user.id,
         type: "APPLICATION_STATUS_UPDATE",
-        message: `The status of your application for "${
-          updatedApplication.job?.title || "a position"
-        }" has been updated to ${
-          status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
-        }.`,
+        message: `Your application for "${updatedApplication.job?.title ?? "a position"}" was updated to ${status
+          .toLowerCase()
+          .replace("_", " ")}.`,
         link: `/dashboard/job-seeker/applications?applicationId=${updatedApplication.id}`,
       },
     });
@@ -75,7 +63,11 @@ export async function PUT(
     return NextResponse.json(updatedApplication);
   } catch (error) {
     // Prisma's P2025 error code indicates that a record to update was not found.
-    if (error instanceof Error && (error as any).code === 'P2025') {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      error.code === "P2025"
+    ) {
       return new NextResponse("Application not found", { status: 404 });
     }
     console.error("[APPLICATION_STATUS_PUT]", error);

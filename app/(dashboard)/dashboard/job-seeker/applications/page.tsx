@@ -1,18 +1,5 @@
 'use client'
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { SkeletonList } from "@/components/ui/skeleton"
-import { JobDialog } from "@/components/ui/job-dialog"
-import { PastApplicationDetailsDialog } from "@/components/ui/past-application-details-dialog"
-import { InterviewDetailsDialog, type InterviewDetails } from "@/components/ui/interview-details-dialog"
 import {
   FileText,
   Clock,
@@ -27,6 +14,20 @@ import {
   Briefcase,
   Mail,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useMemo, useState } from "react"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { InterviewDetailsDialog, type InterviewDetails } from "@/components/ui/interview-details-dialog"
+import { JobDialog } from "@/components/ui/job-dialog"
+import { PastApplicationDetailsDialog } from "@/components/ui/past-application-details-dialog"
+import { SkeletonList } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useDashboard } from "@/context/DashboardContext"
 
 type JobWithCompanyAndSkills = {
@@ -122,7 +123,7 @@ export default function JobSeekerApplications() {
           const data = await res.json()
           setInterviews(data)
         }
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
@@ -139,7 +140,7 @@ export default function JobSeekerApplications() {
           const data = await res.json()
           setInvitations(data.map((inv: any) => ({ ...inv, isInvitation: true })))
         }
-      } catch (e) { /* ignore */ }
+      } catch { /* ignore */ }
     }
     fetchInvitations()
   }, [session, status])
@@ -218,7 +219,7 @@ export default function JobSeekerApplications() {
         // toast.error(`Failed to ${newStatus.toLowerCase()} invitation.`);
         setInvitations(originalInvitations); // Revert on failure
       }
-    } catch (error) {
+    } catch {
       // toast.error("An error occurred.");
       setInvitations(originalInvitations);
     }

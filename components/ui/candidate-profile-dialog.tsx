@@ -1,6 +1,17 @@
 "use client"
 
-import type { JobSeeker, Skill, Company, Application, Job, User, Experience, Education } from "@prisma/client"
+import { MapPin } from "lucide-react"
+import {
+  Briefcase,
+  Calendar,
+  Clock,
+  GraduationCap,
+  MessageSquare,
+} from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,10 +20,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import {
   Tooltip,
@@ -20,9 +28,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Building, Briefcase, GraduationCap, Mail, MessageSquare, Calendar, User as UserIcon, MapPin, DollarSign, Clock } from "lucide-react"
-import { useConversation } from "@/context/ConversationContext";
-import { useRouter } from "next/navigation";
+
+import type { Application, Education, Experience, Job, JobSeeker, Skill, User } from "@prisma/client"
 
 type ApplicationWithFullRelations = Application & {
   job: Pick<Job, 'title' | 'location' | 'salaryMin' | 'salaryMax' | 'employmentType' | 'applicationDeadline' | 'status'>;

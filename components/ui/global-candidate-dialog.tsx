@@ -1,18 +1,19 @@
 "use client"
 
-import { useDashboard, ApplicationWithRelations } from "@/context/DashboardContext";
-import { useConversation } from "@/context/ConversationContext";
-import { CandidateProfileDialog } from "./candidate-profile-dialog";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
+import { useConversation } from "@/context/ConversationContext";
+import { useDashboard, ApplicationWithRelations } from "@/context/DashboardContext";
+
+
+import { CandidateProfileDialog } from "./candidate-profile-dialog";
 export function GlobalCandidateDialog() {
   const { viewingCandidate, setViewingCandidate } = useDashboard();
   const { setNewConversationInfo } = useConversation();
   const router = useRouter();
 
-  // We need to manage scheduling state here since the dialog is global
-  const [schedulingFor, setSchedulingFor] = useState<ApplicationWithRelations | null>(null);
+  // Scheduling is handled by the global dialog; no local scheduling state needed here
   const [scheduledApplicationIds, setScheduledApplicationIds] = useState<Set<string>>(new Set());
 
   // When the dialog opens, fetch the latest interview schedule to check the status
@@ -50,11 +51,10 @@ export function GlobalCandidateDialog() {
         application={viewingCandidate}
         open={!!viewingCandidate}
         onOpenChange={(isOpen) => !isOpen && setViewingCandidate(null)}
-        onSchedule={() => viewingCandidate && setSchedulingFor(viewingCandidate)}
+        onSchedule={() => { /* scheduling is handled elsewhere for the global dialog */ }}
         onMessage={() => viewingCandidate && handleMessageCandidate(viewingCandidate)}
         isScheduled={!!viewingCandidate && scheduledApplicationIds.has(viewingCandidate.id)}
       />
-      {/* We can add the ScheduleInterviewDialog here later if needed */}
     </>
   );
 }

@@ -1,21 +1,21 @@
+import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { z } from 'zod';
+
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
-import { Prisma } from '@prisma/client';
-
 const updateStatusSchema = z.object({
   status: z.enum(['ACCEPTED', 'DECLINED']),
 });
 
-export async function GET(req: Request) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'JOB_SEEKER') {
     return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
   }
 
-  try {
+  try { // 'req' is defined but never used.
     const jobSeeker = await prisma.jobSeeker.findUnique({
       where: { userId: session.user.id },
       select: { id: true },

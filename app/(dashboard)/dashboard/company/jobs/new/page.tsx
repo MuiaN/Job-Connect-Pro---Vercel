@@ -1,18 +1,7 @@
 "use client"
 
-import { useSession } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { toast } from "sonner"
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Job, JobSkill, Skill as PrismaSkill } from "@prisma/client"
+import { motion, AnimatePresence } from "framer-motion"
 import { 
   ArrowLeft, 
   Save, 
@@ -26,12 +15,23 @@ import {
   Users,
   Briefcase,
   FileText,
-  Sparkles
+  Sparkles,
 } from "lucide-react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Job, JobSkill, Skill as PrismaSkill } from "@prisma/client"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { Suspense } from "react"
+import { useEffect, useState } from "react";
+import { toast } from "sonner"
 
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 interface Skill {
   name: string;
   level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
@@ -41,7 +41,7 @@ type JobWithSkills = Job & {
   skills: (JobSkill & { skill: PrismaSkill })[];
 };
 
-export default function NewJobPosting() {
+function NewJobPostingContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -110,7 +110,7 @@ export default function NewJobPosting() {
           setSkills(job.skills.map(s => ({ name: s.skill.name, level: s.level })));
           toast.info("Job data has been pre-filled for reposting.");
 
-        } catch (error) {
+        } catch {
           toast.error("An error occurred while fetching job data.");
         }
       };
@@ -166,17 +166,6 @@ export default function NewJobPosting() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -599,4 +588,26 @@ export default function NewJobPosting() {
       </div>
     </div>
   )
+}
+
+function NewJobPageLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-2 text-muted-foreground">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function NewJobPostingPage() {
+  // This wrapper component is a Server Component.
+  // It wraps the actual page content in a Suspense boundary,
+  // which is necessary because the content uses the useSearchParams hook.
+  return (
+    <Suspense fallback={<NewJobPageLoading />}>
+      <NewJobPostingContent />
+    </Suspense>
+  );
 }

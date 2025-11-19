@@ -1,18 +1,20 @@
 'use client'
 
-import { useSession } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState, useRef, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { Skeleton, SkeletonList } from "@/components/ui/skeleton"
 import { format, isToday, isYesterday, isSameDay, isThisWeek } from 'date-fns';
 import { MessageSquare, Send, Search, Building } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react"
+import { useEffect, useState, useRef, useMemo } from "react"
+import { Suspense } from 'react';
 
-export default function JobSeekerMessages() {
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+
+function JobSeekerMessagesContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -64,6 +66,7 @@ export default function JobSeekerMessages() {
     }, 60000); // Update every minute
 
     return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status, router, searchParams]);
 
   const fetchConversations = async () => {
@@ -191,39 +194,6 @@ export default function JobSeekerMessages() {
     return deadline < currentTime;
   }, [selectedConversation, currentTime]);
 
-  if (status === "loading" || isConversationsLoading) {
-    return (
-      <div className="flex flex-col h-screen bg-background">
-        <DashboardNav userType="job_seeker" />
-        <div className="flex-1 flex overflow-hidden">
-          <div className="w-full lg:w-[320px] xl:w-[380px] border-r border-border flex flex-col">
-            <div className="p-4 border-b border-border">
-              <Skeleton className="h-8 w-3/4 mb-4" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="flex-1 p-2 space-y-2">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center space-x-4 p-2">
-                  <Skeleton className="h-12 w-12 rounded-md" />
-                  <div className="space-y-2 flex-1">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="hidden lg:flex flex-1 items-center justify-center">
-            <div className="text-center text-muted-foreground">
-              <MessageSquare className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-              <h3 className="text-xl font-medium text-foreground mb-2">Loading Conversations...</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col h-screen bg-background">
       <DashboardNav userType="job_seeker" />
@@ -238,38 +208,52 @@ export default function JobSeekerMessages() {
               </div>
             </div>
             <div className="flex-1 overflow-y-auto">
-              {conversations.filter(c =>
-                c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                c.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
-              ).map(convo => (
-                <div
-                  key={convo.id}
-                  onClick={() => handleConversationSelect(convo)}
-                  className={`p-4 cursor-pointer border-b border-border/50 transition-colors ${selectedConversation?.id === convo.id ? 'bg-muted' : 'hover:bg-muted/50'}`}
-                >
-                  <div className="flex items-start space-x-4">
-                    <Avatar className="h-12 w-12 rounded-md">
-                      <AvatarImage src={convo.logoUrl || ''} />
-                      <AvatarFallback className="rounded-md bg-primary/10"><Building className="w-5 h-5 text-primary" /></AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-foreground truncate pr-2">{convo.name}</h3>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
-                          {formatConversationTimestamp(convo.timestamp)}
-                        </span>
+              {isConversationsLoading ? (
+                <div className="flex-1 p-2 space-y-2">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="flex items-center space-x-4 p-2">
+                      <Skeleton className="h-12 w-12 rounded-md" />
+                      <div className="space-y-2 flex-1">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
                       </div>
-                      {convo.job?.title && (
-                        <p className="text-xs text-muted-foreground truncate">{convo.job.title}</p>
-                      )}
-                      <div className="flex items-center justify-between mt-1">
-                        <p className="text-sm text-muted-foreground truncate pr-2">{convo.lastMessage}</p>
-                        {convo.unreadCount > 0 && <Badge className="bg-primary h-5 w-5 p-0 flex items-center justify-center">{convo.unreadCount}</Badge>}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                conversations.filter(c =>
+                  c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  c.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+                ).map(convo => (
+                  <div
+                    key={convo.id}
+                    onClick={() => handleConversationSelect(convo)}
+                    className={`p-4 cursor-pointer border-b border-border/50 transition-colors ${selectedConversation?.id === convo.id ? 'bg-muted' : 'hover:bg-muted/50'}`}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <Avatar className="h-12 w-12 rounded-md">
+                        <AvatarImage src={convo.logoUrl || ''} />
+                        <AvatarFallback className="rounded-md bg-primary/10"><Building className="w-5 h-5 text-primary" /></AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-foreground truncate pr-2">{convo.name}</h3>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">
+                            {formatConversationTimestamp(convo.timestamp)}
+                          </span>
+                        </div>
+                        {convo.job?.title && (
+                          <p className="text-xs text-muted-foreground truncate">{convo.job.title}</p>
+                        )}
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-sm text-muted-foreground truncate pr-2">{convo.lastMessage}</p>
+                          {convo.unreadCount > 0 && <Badge className="bg-primary h-5 w-5 p-0 flex items-center justify-center">{convo.unreadCount}</Badge>}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -358,4 +342,45 @@ export default function JobSeekerMessages() {
         </div>
     </div>
   )
+}
+
+function MessagesLoading() {
+  return (
+    <div className="flex flex-col h-screen bg-background">
+      <DashboardNav userType="job_seeker" />
+      <div className="flex-1 flex overflow-hidden">
+        <div className="w-full lg:w-[320px] xl:w-[380px] border-r border-border flex flex-col">
+          <div className="p-4 border-b border-border">
+            <Skeleton className="h-8 w-3/4 mb-4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="flex-1 p-2 space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center space-x-4 p-2">
+                <Skeleton className="h-12 w-12 rounded-md" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="hidden lg:flex flex-1 items-center justify-center">
+          <div className="text-center text-muted-foreground">
+            <MessageSquare className="w-16 h-16 mx-auto mb-4 text-slate-400" />
+            <h3 className="text-xl font-medium text-foreground mb-2">Loading Conversations...</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function JobSeekerMessagesPage() {
+  return (
+    <Suspense fallback={<MessagesLoading />}>
+      <JobSeekerMessagesContent />
+    </Suspense>
+  );
 }

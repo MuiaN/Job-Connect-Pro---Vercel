@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 
+import { prisma } from '@/lib/prisma';
 /**
  * GET /api/jobs
  * Fetches all active jobs for public job listings.
  */
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const jobs = await prisma.job.findMany({
-      where: {
+      where: { // 'req' is defined but never used.
         status: 'ACTIVE',
       },
       include: {

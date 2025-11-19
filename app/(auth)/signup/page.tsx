@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Users, Mail, Lock, AlertCircle, User, Building } from "lucide-react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 function SignUpForm() {
   const [name, setName] = useState("")
@@ -28,7 +29,7 @@ function SignUpForm() {
     if (roleParam === "company") {
       setRole("COMPANY")
     }
-  })
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,8 +68,9 @@ function SignUpForm() {
         const data = await response.json()
         setError(data.error || "An error occurred")
       }
-    } catch (error) {
-      setError("An error occurred. Please try again.")
+    } catch (err) {
+      console.error(err)
+      setError(err instanceof Error ? err.message : "An error occurred. Please try again.")
     } finally {
       setLoading(false)
     }

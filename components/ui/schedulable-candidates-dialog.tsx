@@ -1,6 +1,9 @@
 "use client"
 
-import type { JobSeeker, Skill, Company, Application, Job, User, Experience, Education } from "@prisma/client"
+import { Calendar } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,9 +11,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar } from "lucide-react"
+
+import type { Application, Education, Experience, Job, JobSeeker, Skill, User } from "@prisma/client"
 
 type ApplicationWithRelations = Application & {
   job: Pick<Job, 'id' | 'title' | 'status' | 'applicationDeadline'>;

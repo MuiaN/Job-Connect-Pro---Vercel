@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, Suspense, useEffect } from "react"
-import { signIn, getSession } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Users, Mail, Lock, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
+import { signIn, getSession } from "next-auth/react"
+import { useState, Suspense, useEffect } from "react"
+
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 function SignInForm() {
   const [email, setEmail] = useState("")
@@ -50,6 +51,7 @@ function SignInForm() {
         }
       }
     } catch (error) {
+      console.error(error)
       setError("An error occurred. Please try again.")
     } finally {
       setLoading(false)
@@ -165,7 +167,7 @@ function SignInForm() {
             </Button>
 
             <div className="text-center text-sm">
-              <span className="text-slate-600">Don't have an account? </span>
+              <span className="text-slate-600">Don&apos;t have an account? </span>
               <Link href="/auth/signup" className="text-blue-600 hover:underline font-medium">
                 Sign up
               </Link>

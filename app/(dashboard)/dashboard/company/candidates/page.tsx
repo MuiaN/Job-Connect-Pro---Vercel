@@ -1,34 +1,33 @@
 'use client'
 
-import type { JobSeeker, Skill, Experience, Education, User as PrismaUser } from "@prisma/client"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { SkeletonList } from "@/components/ui/skeleton"
-import { toast } from "sonner"
-import { CandidateDetailsDialog } from "@/components/ui/candidate-details-dialog"
-import { InviteToApplyDialog } from "@/components/ui/invite-to-apply-dialog"
 import {
   Search,
   MapPin,
   DollarSign,
-  Clock,
-  Star,
   Eye,
-  MessageSquare,
   Sparkles,
   Send,
   EyeOff,
   Briefcase,
-  UserPlus
+  UserPlus,
 } from "lucide-react"
-import type { Job } from "@prisma/client"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { CandidateDetailsDialog } from "@/components/ui/candidate-details-dialog"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { InviteToApplyDialog } from "@/components/ui/invite-to-apply-dialog"
+import { SkeletonList } from "@/components/ui/skeleton"
+
+import type { JobSeeker, Skill, Experience, Education, User as PrismaUser } from "@prisma/client"
+// import type { Job } from "@prisma/client"
 
 type Candidate = JobSeeker & {
   user: Pick<PrismaUser, 'id' | 'name' | 'email' | 'image'>;
@@ -49,7 +48,7 @@ export default function CompanyCandidates() {
   const [hasSearched, setHasSearched] = useState(false)
   const [viewingCandidate, setViewingCandidate] = useState<Candidate | null>(null);
   const [invitingCandidate, setInvitingCandidate] = useState<Candidate | null>(null);
-  const [activeJobs, setActiveJobs] = useState<Job[]>([]);
+  // const [activeJobs, setActiveJobs] = useState<Job[]>([]);
   const [appliedJobIdsByCandidate, setAppliedJobIdsByCandidate] = useState<Record<string, Set<string>>>({});
 
 
@@ -66,11 +65,11 @@ export default function CompanyCandidates() {
 
     const fetchInitialData = async () => {
       try {
-        const jobsResponse = await fetch('/api/jobs/company?status=ACTIVE');
-        if (jobsResponse.ok) {
-          setActiveJobs(await jobsResponse.json());
-        }
-      } catch (error) {
+        // const jobsResponse = await fetch('/api/jobs/company?status=ACTIVE');
+        // if (jobsResponse.ok) {
+        //   setActiveJobs(await jobsResponse.json());
+        // }
+      } catch {
         toast.error("Failed to load active jobs.");
       } finally {
         setInitialLoading(false);
@@ -98,7 +97,7 @@ export default function CompanyCandidates() {
       } else {
         toast.error("AI search failed. Please try a different query.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during the search.");
     } finally {
       setIsSearching(false);

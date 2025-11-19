@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession }
- from "next-auth";
+import { getServerSession } from "next-auth";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -8,9 +8,10 @@ export const dynamic = "force-dynamic"; // Ensure dynamic rendering for params
 
 export async function GET(
   req: Request,
-  { params }: { params: { conversationId: string } }
+  context: { params: Promise<{ conversationId: string }> }
 ) {
-  const { conversationId: applicationId } = await params;
+  const params = await context.params;
+  const { conversationId: applicationId } = params;
 
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +20,7 @@ export async function GET(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const currentUserId = session.user.id;
+    // const currentUserId = session.user.id;
     const messages = await prisma.message.findMany({
       where: {
         applicationId: applicationId,
@@ -64,9 +65,10 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { conversationId: string } }
+  context: { params: Promise<{ conversationId: string }> }
 ) {
-  const { conversationId: applicationId } = await params;
+  const params = await context.params;
+  const { conversationId: applicationId } = params;
 
   try {
     const session = await getServerSession(authOptions);

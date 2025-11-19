@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { AlertCircle, Building, Lock, Mail, User, Users } from "lucide-react"
+import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Users, Mail, Lock, AlertCircle, User, Building } from "lucide-react"
-import Link from "next/link"
 
 function SignUpForm() {
   const [name, setName] = useState("")
@@ -28,7 +29,7 @@ function SignUpForm() {
     if (roleParam === "company") {
       setRole("COMPANY")
     }
-  }, [searchParams])
+  }, [searchParams, setRole])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

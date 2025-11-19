@@ -1,28 +1,20 @@
 "use client"
 
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import {
+  Briefcase,
   Calendar,
   Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Briefcase,
-  FileText,
   DollarSign,
+  FileText,
   MapPin,
-  User,
 } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 
 // This type should ideally be shared, but we define it here for clarity.
 type Interview = {

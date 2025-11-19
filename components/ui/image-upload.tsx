@@ -1,11 +1,13 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { Building, Camera, Upload, User, X } from "lucide-react"
+import Image from "next/image"
+import { useCallback, useRef, useState } from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Upload, X, Camera, User, Building } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
 
 interface ImageUploadProps {
   value?: string
@@ -160,13 +162,16 @@ export function ImageUpload({
         ) : (
           <Card className="relative overflow-hidden modern-card">
             <CardContent className="p-0">
-              <img 
-                src={value} 
-                alt="Uploaded image" 
+              <Image
+                src={value}
+                alt="Uploaded image"
                 className="w-full h-48 object-cover"
+                width={500} // Provide appropriate width
+                height={200} // Provide appropriate height                
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
                 <Button
+                  type="button"
                   size="sm"
                   variant="secondary"
                   onClick={handleClick}
@@ -177,6 +182,7 @@ export function ImageUpload({
                   Change
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
                   variant="destructive"
                   onClick={onRemove}

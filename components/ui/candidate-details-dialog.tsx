@@ -1,6 +1,10 @@
 "use client"
 
-import type { JobSeeker, Skill, User, Experience, Education } from "@prisma/client"
+import { Briefcase, GraduationCap, UserPlus } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,12 +13,10 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Briefcase, GraduationCap, Mail, MessageSquare, UserPlus } from "lucide-react"
+
+import type { Education, Experience, JobSeeker, Skill, User } from "@prisma/client"
 
 type Candidate = JobSeeker & {
   user: Pick<User, 'id' | 'name' | 'email' | 'image'>;

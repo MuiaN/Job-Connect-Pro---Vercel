@@ -1,6 +1,21 @@
 "use client"
 
-import type { Job, Company, JobSkill, Skill } from "@prisma/client"
+import {
+  Briefcase,
+  Building,
+  Calendar,
+  Check,
+  ClipboardList,
+  DollarSign,
+  MapPin,
+  Sparkles,
+  Users,
+  X,
+} from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,24 +24,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import {
-  MapPin,
-  DollarSign,
-  Clock,
-  Building,
-  Briefcase,
-  Sparkles,
-  Check,
-  ClipboardList,
-  Users,
-  X,
-  Calendar,
-} from "lucide-react"
+
+import type { Company, Job, JobSkill, Skill } from "@prisma/client"
 
 export type JobWithDetails = Job & {
   company: Pick<Company, 'name' | 'logoUrl'>;

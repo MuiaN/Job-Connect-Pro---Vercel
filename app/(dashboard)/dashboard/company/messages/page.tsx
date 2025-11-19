@@ -1,26 +1,24 @@
 'use client'
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState, useRef, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { Skeleton } from "@/components/ui/skeleton"
-import { toast } from "sonner"
+import { format, isToday, isYesterday, isThisWeek, isSameDay } from 'date-fns'
 import {
   MessageSquare,
   Send,
   Search,
   Calendar
 } from "lucide-react"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState, useRef, useMemo, useCallback } from "react"
+import { toast } from "sonner"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { ScheduleInterviewDialog } from "@/components/ui/schedule-interview-dialog"
-import { format, isToday, isYesterday, isThisWeek, isSameDay } from 'date-fns';
+import { Skeleton } from "@/components/ui/skeleton"
 import { useConversation } from "@/context/ConversationContext"
 
 export default function CompanyMessages() {
@@ -69,6 +67,23 @@ export default function CompanyMessages() {
 
   const { newConversationInfo, setNewConversationInfo } = useConversation();
 
+  const createVirtualConversation = useCallback((applicationId: string | undefined, candidateId: string, name: string | null, avatar: string | null, jobTitle?: string | null, jobId?: string | undefined): Conversation => {
+    return {
+      id: `virtual-${applicationId ?? candidateId}`,
+      name: name,
+      logoUrl: avatar,
+      role: 'JOB_SEEKER',
+      lastMessage: 'Start the conversation...',
+      timestamp: new Date(),
+      unreadCount: 0,
+      job: {
+        title: jobTitle || 'New Conversation',
+        id: jobId,
+        applicationDeadline: null,
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (status === "loading") return
 
@@ -82,7 +97,9 @@ export default function CompanyMessages() {
       return
     }
 
+    let isMounted = true;
     const loadData = async () => {
+      if (!isMounted) return;
       setIsConversationsLoading(true);
       let conversationToSelect: Conversation | null = null;
       let initialMessages: Message[] = [];
@@ -107,9 +124,12 @@ export default function CompanyMessages() {
         // If no existing conversation, create a virtual one
         if (!conversationToSelect) {
           conversationToSelect = createVirtualConversation(
+            newConversationInfo.applicationId,
             newConversationInfo.candidateId,
             newConversationInfo.name,
-            newConversationInfo.avatar
+            newConversationInfo.avatar,
+            newConversationInfo.jobTitle,
+            newConversationInfo.jobId
           );
           setVirtualConversationDetails(newConversationInfo); // Persist details for sending the first message
         }
@@ -132,6 +152,7 @@ export default function CompanyMessages() {
         if (conversationToSelect && conversationToSelect.id.startsWith('virtual-')) {
           allConversations = [conversationToSelect, ...allConversations];
         }
+        if (!isMounted) return;
         setConversations(allConversations);
 
         // --- Step 3: Determine which conversation to display ---
@@ -147,13 +168,14 @@ export default function CompanyMessages() {
             }
           }
         }
+        if (!isMounted) return;
         setMessages(initialMessages);
 
       } catch (error) {
         console.error("Error fetching conversations:", error);
         toast.error("An error occurred while fetching conversations.");
       } finally {
-        setIsConversationsLoading(false);
+        if (isMounted) setIsConversationsLoading(false);
       }
     };
 
@@ -161,27 +183,13 @@ export default function CompanyMessages() {
 
     const timer = setInterval(() => {
       setCurrentTime(Date.now());
-    }, 60000); // Update every minute
+    }, 60 * 1000); // update every minute
 
-    return () => clearInterval(timer); // Cleanup timer on unmount
-  }, [session, status, router]);
-
-  const createVirtualConversation = (candidateId: string, name: string | null, avatar: string | null): Conversation => {
-    return {
-      id: `virtual-${newConversationInfo?.applicationId}`, // Use a consistent virtual ID format
-      name: name,
-      logoUrl: avatar,
-      role: 'JOB_SEEKER',
-      lastMessage: 'Start the conversation...',
-      timestamp: new Date(),
-      unreadCount: 0,
-      job: {
-        title: newConversationInfo?.jobTitle || 'New Conversation',
-        id: newConversationInfo?.jobId,
-        applicationDeadline: null, // We don't know this for a virtual convo yet
-      }
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
     };
-  }
+  }, [session, status, router, newConversationInfo, setNewConversationInfo, createVirtualConversation]);
 
   const formatConversationTimestamp = (timestamp: Date | undefined): string => {
     if (!timestamp) {

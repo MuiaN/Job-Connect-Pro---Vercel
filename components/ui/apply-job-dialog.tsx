@@ -1,17 +1,14 @@
 "use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Briefcase, CheckCircle, Sparkles, XCircle } from "lucide-react"
+
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, XCircle, AlertTriangle, Briefcase, User, Sparkles } from "lucide-react"
-import type { Job, Skill, Company } from "@prisma/client"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog"
+
+import type { Company, Job, Skill } from "@prisma/client"
 
 type JobWithCompanyAndSkills = Job & {
   company: Pick<Company, 'name' | 'logoUrl'>;

@@ -1,11 +1,12 @@
 "use client"
 
+import { ArrowRight, Calendar, CheckCircle, MessageSquare, Search, Shield, Sparkles, Star, Users, Zap } from "lucide-react"
+import Link from "next/link"
+
 import { Navbar } from "@/components/navigation/navbar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Users, MessageSquare, Calendar, Search, Zap, Shield, Star, CheckCircle, Sparkles } from "lucide-react"
-import Link from "next/link"
 
 const features = [
   {

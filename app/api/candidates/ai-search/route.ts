@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { gemini } from '@/lib/ai/gemini';
 import { generateObject } from 'ai';
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 import { z } from 'zod';
+
+import { gemini } from '@/lib/ai/gemini';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 const searchCriteriaSchema = z.object({
   keywords: z.array(z.string()).optional().describe("An array of relevant keywords extracted from the query, including job titles, technologies, and concepts. e.g., ['React', 'frontend', 'engineer']."),

@@ -1,6 +1,10 @@
 "use client"
 
-import type { Job, Skill, Company, Application } from "@prisma/client"
+import { Building, Calendar, Clock } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,10 +13,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar" 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Building, Calendar, Clock } from "lucide-react"
+
+import type { Company, Job, Skill } from "@prisma/client"
 
 type JobWithCompany = Job & {
   company: Pick<Company, 'name' | 'logoUrl'>;

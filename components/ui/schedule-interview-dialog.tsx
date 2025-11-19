@@ -1,17 +1,19 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import type { Application, Job, JobSeeker, User } from "@prisma/client"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+
+import type { Application, Job, JobSeeker, User } from "@prisma/client"
 
 type ApplicationWithRelations = Application & {
   job: Pick<Job, 'title'>;

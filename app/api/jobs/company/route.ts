@@ -1,9 +1,10 @@
+import { JobStatus, ExperienceLevel, EmploymentType, RemotePreference, SkillLevel, Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Prisma, JobStatus, ExperienceLevel, EmploymentType, RemotePreference, SkillLevel } from "@prisma/client";
-import { z } from "zod";
 
 const jobCreateSchema = z.object({
   title: z.string().min(1, "Title is required"),

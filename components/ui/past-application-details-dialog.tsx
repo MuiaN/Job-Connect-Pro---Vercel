@@ -1,6 +1,19 @@
 'use client'
 
-import type { Application, Job, Company, Interview } from "@prisma/client"
+import {
+  AlertCircle,
+  Briefcase,
+  Building,
+  Calendar,
+  CheckCircle,
+  FileText,
+  MapPin,
+  Sparkles,
+  XCircle,
+} from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
   Dialog,
   DialogContent,
@@ -8,20 +21,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  FileText,
-  Clock,
-  MapPin,
-  Building,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Calendar,
-  Briefcase,
-  Sparkles,
-} from "lucide-react"
+
+import type { Application, Company, Interview, Job } from "@prisma/client"
 
 type JobWithCompanyAndSkills = Job & {
   company: Pick<Company, 'name' | 'logoUrl'>;
@@ -40,7 +41,7 @@ interface PastApplicationDetailsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const getStatusInfo = (status: string, hasInterview: boolean) => {
+const getStatusInfo = (status: string) => {
   switch (status) {
     case "ACCEPTED":
       return {
@@ -82,7 +83,7 @@ export function PastApplicationDetailsDialog({ application, open, onOpenChange }
   if (!application) return null;
 
   const hasInterview = application.interviews && application.interviews.length > 0;
-  const { Icon, color, bgColor, title, description } = getStatusInfo(application.status, hasInterview);
+  const { Icon, color, bgColor, title, description } = getStatusInfo(application.status);
   const deadlinePassed = application.job?.applicationDeadline ? new Date(application.job.applicationDeadline) < new Date() : false;
   const showDeadlineMessage = deadlinePassed && (application.status === 'ACCEPTED' || application.status === 'INTERVIEW');
 

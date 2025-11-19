@@ -1,14 +1,16 @@
+import { JobStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { JobStatus } from "@prisma/client";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { jobId: string } }
+  context: { params: Promise<{ jobId: string }> }
 ) {
   try {
+    const params = await context.params;
     const session = await getServerSession(authOptions);
     if (!session?.user?.id || session.user.role !== "COMPANY") {
       return new NextResponse("Unauthorized", { status: 401 });

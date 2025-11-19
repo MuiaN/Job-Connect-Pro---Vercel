@@ -1,34 +1,28 @@
 "use client"
 
 import { Company, CompanySize } from "@prisma/client"
-import { toast } from "sonner"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Progress } from "@/components/ui/progress"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { ImageUpload } from "@/components/ui/image-upload"
-import { SkeletonList } from "@/components/ui/skeleton"
 import {
   Building,
   Save,
-  MapPin,
-  Plus,  
-  Users,
-  Award,
-  Eye,
-  EyeOff,
   CheckCircle,
   AlertCircle,
   Sparkles,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ImageUpload } from "@/components/ui/image-upload"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SkeletonList } from "@/components/ui/skeleton"
+import { Textarea } from "@/components/ui/textarea"
 
 type CompanyProfileData = Partial<Company>;
 

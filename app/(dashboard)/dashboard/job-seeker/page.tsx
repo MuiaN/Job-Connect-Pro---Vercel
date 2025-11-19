@@ -1,15 +1,5 @@
 "use client"
 
-import { useSession } from "next-auth/react"
-import type { Job, JobSeeker, Skill, Company, Application } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState, useTransition, MouseEvent } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ApplyJobDialog } from "@/components/ui/apply-job-dialog"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
-import { JobDialog } from "@/components/ui/job-dialog"
 import { 
   MessageSquare, 
   Calendar, 
@@ -20,7 +10,6 @@ import {
   Clock,
   Building,  
   FileText,
-  Search,
   Briefcase,
   MailPlus,
   EyeOff,
@@ -29,12 +18,23 @@ import {
 } from "lucide-react"
 import { Send } from "lucide-react"
 import Link from "next/link"
-import { SkeletonList } from "@/components/ui/skeleton"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState, useTransition} from "react"
 import { toast } from "sonner"
-import { User } from "@prisma/client"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { ApplyJobDialog } from "@/components/ui/apply-job-dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { JobDialog } from "@/components/ui/job-dialog"
+import { SkeletonList } from "@/components/ui/skeleton"
 import { useDashboard } from "@/context/DashboardContext"
+
+import type { Job, Skill, Company } from "@prisma/client"
 
 type JobWithCompany = Job & {
   company: Pick<Company, 'name' | 'logoUrl'>;
@@ -42,7 +42,7 @@ type JobWithCompany = Job & {
 };
 
 export default function JobSeekerDashboard() {
-  const { data: session, status } = useSession()
+  const { data: session, status: sessionStatus } = useSession()
   const router = useRouter()
   type JobSeekerProfile = {
     image?: string
@@ -66,25 +66,24 @@ export default function JobSeekerDashboard() {
     applications?: number
   }
 
-  type Activity = {
-    id: string
-    type: 'PROFILE_VIEW' | 'MESSAGE' | 'INTERVIEW'
-    companyName: string
-    timestamp: string
-    description: string
-  }
+  // type Activity = {
+  //   id: string
+  //   type: 'PROFILE_VIEW' | 'MESSAGE' | 'INTERVIEW'
+  //   companyName: string
+  //   timestamp: string
+  //   description: string
+  // }
 
   const [profile, setProfile] = useState<JobSeekerProfile | null>(null)
   const [selectedJob, setSelectedJob] = useState<JobWithCompany | null>(null);
   const [jobToApply, setJobToApply] = useState<JobWithCompany | null>(null);
-  const [jobs, setJobs] = useState<JobWithCompany[]>([]);
+  // const [jobs, setJobs] = useState<JobWithCompany[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     invitations: 0,
     messages: 0,
     conversations: 0,
     applications: 0,
   })
-  const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [isPending, startTransition] = useTransition();
   const { setTargetApplicationTab } = useDashboard();
@@ -94,10 +93,10 @@ export default function JobSeekerDashboard() {
     // It ensures that if the user navigates away and back, the tab state is clean.
     // The primary fix is in handleCardClick and the new useEffect below.
     setTargetApplicationTab(null);
-  }, []);
+  }, [setTargetApplicationTab]);
 
   useEffect(() => {
-    if (status === "loading") return
+    if (sessionStatus === "loading") return
     
     if (!session) {
       router.push("/auth/signin")
@@ -118,13 +117,12 @@ export default function JobSeekerDashboard() {
           const data = await dashboardResponse.json()
           setProfile(data.profile || {})
           setStats(data.stats || {})
-          setActivities(data.activities || [])
           // Set applied jobs from profile data
           if (data.profile?.applications) {
             setAppliedJobIds(new Set(data.profile.applications.map((app: { jobId: string }) => app.jobId)));
           }
         } else {
-          console.error("Failed to fetch dashboard data")
+          console.error("Failed to fetch dashboard data:", dashboardResponse.statusText)
         }
 
       } catch (error) {
@@ -134,7 +132,7 @@ export default function JobSeekerDashboard() {
       }
     }
     fetchDashboardData()
-  }, [session, status, router])
+  }, [session, sessionStatus, router])
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -154,7 +152,7 @@ export default function JobSeekerDashboard() {
       } else {
         toast.error("AI search failed. Please try a different query.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during the search.");
     } finally {
       setIsSearching(false);
@@ -174,7 +172,7 @@ export default function JobSeekerDashboard() {
     startTransition(() => router.push('/dashboard/job-seeker/applications'));
   };
 
-  if (status === "loading" || loading) {
+  if (sessionStatus === "loading" || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950">
         <DashboardNav userType="job_seeker" />
@@ -221,7 +219,7 @@ export default function JobSeekerDashboard() {
           const errorData = await response.json();
           toast.error(errorData.message || "Failed to submit application.");
         }
-      } catch (error) {
+      } catch {
         toast.error("An error occurred while applying.");
       }
     });

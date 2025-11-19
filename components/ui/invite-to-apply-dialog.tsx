@@ -1,7 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import type { Job, JobSeeker, User, JobSkill, Skill } from "@prisma/client"
+import { Briefcase, DollarSign, MapPin, Plus, Send } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,16 +15,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
-import { Briefcase, Plus, Send, DollarSign, MapPin } from "lucide-react"
-import Link from "next/link"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Badge } from "@/components/ui/badge"
+import { Textarea } from "@/components/ui/textarea"
+
+import type { Job, JobSeeker, JobSkill, Skill, User } from "@prisma/client"
 
 type Candidate = JobSeeker & {
   user: Pick<User, 'name'>;
@@ -91,11 +93,12 @@ export function InviteToApplyDialog({ candidate, open, onOpenChange, appliedJobI
         toast.success(`Invitation sent to ${candidate.user.name}!`);
         onOpenChange(false);
       } else {
-        const error = await response.json();
-        toast.error(error.message || "Failed to send invitation.");
+        const data = await response.json();
+        toast.error(data?.message || "Failed to send invitation.");
       }
-    } catch (error) {
-      toast.error("An error occurred while sending the invitation.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An error occurred while sending the invitation.";
+      toast.error(message);
     } finally {
       setIsSending(false);
     }

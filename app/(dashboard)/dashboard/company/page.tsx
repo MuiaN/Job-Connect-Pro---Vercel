@@ -1,37 +1,35 @@
 "use client"
 
-import { useSession } from "next-auth/react"
-import type { JobSeeker, Skill, Company, Application, Job, User, Experience, Education } from "@prisma/client"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState, useMemo } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ScheduleInterviewDialog } from "@/components/ui/schedule-interview-dialog"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
 import { 
   Building, 
-  MessageSquare, 
   Calendar, 
   Plus,
   Briefcase,
   Users,
   MapPin,
-  DollarSign,
   Clock,
   Eye,
   Pencil,
   CheckCircle,
   Link as LinkIcon,
 } from "lucide-react"
-import { toast } from "sonner"
-import { CandidateProfileDialog } from "@/components/ui/candidate-profile-dialog"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState, useMemo } from "react"
+
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { CandidateProfileDialog } from "@/components/ui/candidate-profile-dialog"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScheduleInterviewDialog } from "@/components/ui/schedule-interview-dialog"
 import { SkeletonList } from "@/components/ui/skeleton"
 import { useConversation } from "@/context/ConversationContext"
 import { useDashboard } from "@/context/DashboardContext"
+
+import type { JobSeeker, Skill, Company, Application, Job, User, Experience, Education } from "@prisma/client"
 
 type ApplicationWithRelations = Application & {
   job: Pick<Job, 'title' | 'location' | 'salaryMin' | 'salaryMax' | 'employmentType' | 'applicationDeadline' | 'status'>;
@@ -56,7 +54,7 @@ interface DashboardStats {
 export default function CompanyDashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
   const [profile, setProfile] = useState<Partial<Company> | null>(null)
   const [recentApplications, setRecentApplications] = useState<ApplicationWithRelations[]>([])
   const [jobs, setJobs] = useState<JobWithStatus[]>([]);

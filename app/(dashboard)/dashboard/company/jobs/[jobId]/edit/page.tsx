@@ -1,20 +1,9 @@
- "use client"
+"use client"
 
-import { useSession } from "next-auth/react"
-import { useRouter, useParams } from "next/navigation"
-import { toast } from "sonner" 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Job, JobSkill, Skill as PrismaSkill } from "@prisma/client"
+import { motion, AnimatePresence } from "framer-motion"
 import { 
   ArrowLeft, 
-  Save, 
   Eye, 
   Plus, 
   X,
@@ -29,9 +18,19 @@ import {
   Sparkles
 } from "lucide-react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Job, JobSkill, Skill as PrismaSkill } from "@prisma/client"
+import { useRouter, useParams } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
+import { DashboardNav } from "@/components/layout/dashboard-nav"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 interface Skill {
   name: string;
   level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
