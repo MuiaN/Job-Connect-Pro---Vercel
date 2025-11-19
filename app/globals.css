@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.75rem;
+  
+  /* Light theme - Enhanced gradient colors */
+  --background: oklch(0.99 0.005 240);
+  --foreground: oklch(0.09 0.02 240);
+  --card: oklch(0.98 0.01 240 / 0.9);
+  --card-foreground: oklch(0.09 0.02 240);
+  --popover: oklch(0.98 0.01 240 / 0.95);
+  --popover-foreground: oklch(0.09 0.02 240);
+  --primary: oklch(0.55 0.25 260);
+  --primary-foreground: oklch(0.98 0.01 240);
+  --secondary: oklch(0.95 0.02 240);
+  --secondary-foreground: oklch(0.15 0.02 240);
+  --muted: oklch(0.96 0.01 240);
+  --muted-foreground: oklch(0.45 0.02 240);
+  --accent: oklch(0.94 0.03 260);
+  --accent-foreground: oklch(0.15 0.02 240);
+  --destructive: oklch(0.65 0.25 15);
+  --border: oklch(0.92 0.01 240 / 0.3);
+  --input: oklch(0.94 0.01 240 / 0.5);
+  --ring: oklch(0.55 0.25 260 / 0.3);
+  
+  /* Chart colors */
+  --chart-1: oklch(0.55 0.25 260);
+  --chart-2: oklch(0.65 0.2 180);
+  --chart-3: oklch(0.6 0.15 120);
+  --chart-4: oklch(0.7 0.2 60);
+  --chart-5: oklch(0.6 0.25 300);
+  
+  /* Enhanced gradient colors for better visibility */
+  --gradient-primary: linear-gradient(135deg, oklch(0.55 0.25 260) 0%, oklch(0.65 0.2 280) 50%, oklch(0.6 0.25 300) 100%);
+  --gradient-secondary: linear-gradient(135deg, oklch(0.94 0.03 260) 0%, oklch(0.96 0.01 240) 100%);
+  --gradient-background: linear-gradient(135deg, oklch(0.99 0.005 240) 0%, oklch(0.95 0.02 250) 50%, oklch(0.97 0.01 260) 100%);
+  --glass-bg: oklch(0.98 0.01 240 / 0.8);
+  --glass-border: oklch(0.92 0.01 240 / 0.3);
+}
+
+.dark {
+  /* Dark theme - Enhanced contrast colors */
+  --background: oklch(0.08 0.02 240);
+  --foreground: oklch(0.95 0.01 240);
+  --card: oklch(0.12 0.02 240 / 0.95);
+  --card-foreground: oklch(0.95 0.01 240);
+  --popover: oklch(0.12 0.02 240 / 0.98);
+  --popover-foreground: oklch(0.95 0.01 240);
+  --primary: oklch(0.65 0.25 260);
+  --primary-foreground: oklch(0.08 0.02 240);
+  --secondary: oklch(0.15 0.02 240);
+  --secondary-foreground: oklch(0.9 0.01 240);
+  --muted: oklch(0.14 0.02 240);
+  --muted-foreground: oklch(0.6 0.01 240);
+  --accent: oklch(0.18 0.03 260);
+  --accent-foreground: oklch(0.9 0.01 240);
+  --destructive: oklch(0.7 0.25 15);
+  --border: oklch(0.2 0.02 240 / 0.4);
+  --input: oklch(0.16 0.02 240 / 0.7);
+  --ring: oklch(0.65 0.25 260 / 0.4);
+  
+  /* Chart colors - dark theme */
+  --chart-1: oklch(0.65 0.25 260);
+  --chart-2: oklch(0.7 0.2 180);
+  --chart-3: oklch(0.65 0.15 120);
+  --chart-4: oklch(0.75 0.2 60);
+  --chart-5: oklch(0.65 0.25 300);
+  
+  /* Enhanced dark mode gradients with better contrast */
+  --gradient-primary: linear-gradient(135deg, oklch(0.65 0.25 260) 0%, oklch(0.55 0.2 280) 50%, oklch(0.6 0.25 300) 100%);
+  --gradient-secondary: linear-gradient(135deg, oklch(0.18 0.03 260) 0%, oklch(0.14 0.02 240) 100%);
+  --gradient-background: linear-gradient(135deg, oklch(0.08 0.02 240) 0%, oklch(0.06 0.02 250) 50%, oklch(0.1 0.02 260) 100%);
+  --glass-bg: oklch(0.12 0.02 240 / 0.9);
+  --glass-border: oklch(0.2 0.02 240 / 0.4);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Modern Futuristic Styles */
+
+/* Enhanced glass morphism effects with better contrast */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border);
+}
+
+/* Enhanced modern card styles with better dark mode support */
+.modern-card {
+  @apply glass rounded-2xl p-6 transition-all duration-300 ease-out;
+  box-shadow: 
+    0 4px 6px -1px oklch(0 0 0 / 0.1),
+    0 2px 4px -1px oklch(0 0 0 / 0.06),
+    inset 0 1px 0 oklch(1 0 0 / 0.1);
+}
+
+.modern-card:hover {
+  box-shadow: 
+    0 20px 25px -5px oklch(0 0 0 / 0.1),
+    0 10px 10px -5px oklch(0 0 0 / 0.04),
+    inset 0 1px 0 oklch(1 0 0 / 0.1);
+}
+
+/* Dark mode specific card enhancements */
+.dark .modern-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 
+    0 4px 6px -1px oklch(0 0 0 / 0.3),
+    0 2px 4px -1px oklch(0 0 0 / 0.2),
+    inset 0 1px 0 oklch(1 0 0 / 0.05);
+}
+
+.dark .modern-card:hover {
+  box-shadow: 
+    0 20px 25px -5px oklch(0 0 0 / 0.4),
+    0 10px 10px -5px oklch(0 0 0 / 0.3),
+    inset 0 1px 0 oklch(1 0 0 / 0.05);
+}
+
+/* Enhanced modern input styles */
+.input-modern {
+  @apply glass rounded-xl border-0 px-4 py-3 transition-all duration-300;
+  box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.06);
+}
+
+.input-modern:focus {
+  @apply ring-2;
+  ring-color: var(--ring);
+  box-shadow: 
+    inset 0 2px 4px oklch(0 0 0 / 0.06),
+    0 0 0 3px var(--ring);
+}
+
+/* Enhanced gradient text for better visibility */
+.gradient-text-primary {
+  background: linear-gradient(135deg, oklch(0.2 0.15 260) 0%, oklch(0.4 0.2 240) 50%, oklch(0.3 0.18 280) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .gradient-text-primary {
+  background: linear-gradient(135deg, oklch(0.8 0.15 260) 0%, oklch(0.9 0.1 240) 50%, oklch(0.85 0.12 280) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Enhanced section backgrounds for better contrast */
+.section-light {
+  background: linear-gradient(135deg, oklch(0.98 0.01 240 / 0.5) 0%, oklch(0.96 0.02 250 / 0.3) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark .section-light {
+  background: linear-gradient(135deg, oklch(0.1 0.02 240 / 0.7) 0%, oklch(0.08 0.02 250 / 0.5) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Enhanced navigation with better contrast */
+.nav-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.dark .nav-glass {
+  background: oklch(0.08 0.02 240 / 0.95);
+  border-bottom: 1px solid oklch(0.2 0.02 240 / 0.5);
+}
+
+/* Enhanced button styles with better gradients */
+.btn-gradient {
+  background: var(--gradient-primary);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  box-shadow: 0 10px 20px oklch(0.55 0.25 260 / 0.3);
+}
+
+.dark .btn-gradient:hover {
+  box-shadow: 0 10px 20px oklch(0.65 0.25 260 / 0.4);
+}
+
+.btn-gradient-subtle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* New class specifically for the search button to prevent hover movement */
+.btn-search-submit:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Custom component classes */
+@layer components {
+  .job-dialog-content {
+    @apply dialog-card sm:max-w-2xl flex flex-col p-0 max-h-[90vh];
+  }
+  .dialog-card {
+    @apply glass rounded-2xl transition-all duration-300 ease-out;
+  }
+  .job-dialog-header {
+    @apply p-6 pb-4 border-b;
+  }
+  .job-dialog-body {
+    @apply overflow-y-auto px-6 py-4 space-y-6;
+  }
+  .job-dialog-footer {
+    @apply p-6 pt-4 border-t;
+  }
+}
