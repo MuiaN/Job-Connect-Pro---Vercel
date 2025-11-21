@@ -1,6 +1,6 @@
 'use client'
 
-import { Headphones, Mail, MapPin, MessageSquare, Phone, Send, Users } from 'lucide-react'
+import { Headphones, Mail, MessageSquare, Phone, Send } from 'lucide-react'
 import { useState } from 'react'
 
 import { Footer } from '@/components/footer/footer'
@@ -17,53 +17,22 @@ const contactMethods = [
     icon: <Mail className="h-6 w-6" />,
     title: "Email Support",
     description: "Get help via email within 24 hours",
-    contact: "support@jobconnectpro.com",
+    contact: "jobconnectpro@tytantech.co.ke",
     available: "24/7"
   },
   {
     icon: <Phone className="h-6 w-6" />,
     title: "Phone Support",
     description: "Speak directly with our support team",
-    contact: "+1 (555) 123-4567",
-    available: "Mon-Fri, 9AM-6PM PST"
+    contact: "+254 701 876 510",
+    available: "Mon-Fri, 9AM-5PM EAT"
   },
   {
     icon: <MessageSquare className="h-6 w-6" />,
     title: "Live Chat",
     description: "Chat with us in real-time",
     contact: "Available on website",
-    available: "Mon-Fri, 9AM-6PM PST"
-  },
-  {
-    icon: <Users className="h-6 w-6" />,
-    title: "Community Forum",
-    description: "Connect with other users and get help",
-    contact: "community.jobconnectpro.com",
-    available: "24/7"
-  }
-]
-
-const offices = [
-  {
-    city: "San Francisco",
-    address: "123 Tech Street, Suite 400",
-    zipcode: "San Francisco, CA 94105",
-    phone: "+1 (555) 123-4567",
-    email: "sf@jobconnectpro.com"
-  },
-  {
-    city: "New York",
-    address: "456 Business Ave, Floor 12",
-    zipcode: "New York, NY 10001",
-    phone: "+1 (555) 987-6543",
-    email: "ny@jobconnectpro.com"
-  },
-  {
-    city: "Austin",
-    address: "789 Innovation Blvd, Building C",
-    zipcode: "Austin, TX 78701",
-    phone: "+1 (555) 456-7890",
-    email: "austin@jobconnectpro.com"
+    available: "During Business Hours"
   }
 ]
 
@@ -96,8 +65,8 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/10 text-primary dark:text-white border-primary/20">
-            Get In Touch
+          <Badge className="mb-4 px-6 py-2 text-sm font-semibold bg-gradient-to-r from-primary to-purple-500 text-primary-foreground border-transparent shadow-lg">
+            For Kenyans, By Kenyans
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-primary dark:text-white mb-6">
             Contact Us
@@ -254,58 +223,15 @@ export default function ContactPage() {
                   <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
                     For urgent matters, call our support hotline
                   </p>
-                  <Button className="bg-primary hover:bg-primary/90 text-white">
-                    <Phone className="h-4 w-4 mr-2" />
-                    Call Now
-                  </Button>
+                  <a href="tel:+254701876510">
+                    <Button className="bg-primary hover:bg-primary/90 text-white">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call Now
+                    </Button>
+                  </a>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
-
-        {/* Office Locations */}
-        <div className="mt-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-primary dark:text-white mb-4">
-              Our Offices
-            </h2>
-            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Visit us at one of our locations or reach out to your nearest office.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {offices.map((office, index) => (
-              <Card key={index} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <CardTitle className="text-primary dark:text-white flex items-center">
-                    <MapPin className="h-5 w-5 mr-2" />
-                    {office.city}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      {office.address}
-                    </p>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      {office.zipcode}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-slate-700 dark:text-slate-200 text-sm flex items-center">
-                      <Phone className="h-4 w-4 mr-2 text-primary dark:text-white" />
-                      {office.phone}
-                    </p>
-                    <p className="text-slate-700 dark:text-slate-200 text-sm flex items-center">
-                      <Mail className="h-4 w-4 mr-2 text-primary dark:text-white" />
-                      {office.email}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
 
@@ -337,8 +263,8 @@ export default function ContactPage() {
                       Is JobConnect Pro free to use?
                     </h3>
                     <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      We offer both free and premium plans. Basic job searching and posting 
-                      is free, with premium features available for enhanced functionality.
+                      Yes, JobConnect Pro is completely free to use for both job seekers and companies. 
+                      Our mission is to connect talent with opportunity without any barriers.
                     </p>
                   </div>
                   <div>
@@ -363,11 +289,11 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-primary dark:text-white mb-2">
-                      How do I schedule interviews?
+                      How is security ensured on the platform?
                     </h3>
                     <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      Our smart scheduling system integrates with your calendar to find 
-                      mutually available times and sends automatic invitations.
+                      Security on JobConnect Pro is primarily ensured through email verification for all users. 
+                      This helps maintain the authenticity of profiles and interactions on the platform.
                     </p>
                   </div>
                   <div>

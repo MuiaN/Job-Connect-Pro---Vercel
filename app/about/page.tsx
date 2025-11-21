@@ -1,11 +1,12 @@
 'use client'
 
-import { Globe, Heart, Target, Zap } from 'lucide-react'
+import { Globe, Target, Zap, Users } from 'lucide-react'
+import Image from 'next/image'
 
 import { Footer } from '@/components/footer/footer'
 import { Navbar } from '@/components/navigation/navbar'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type PageHeaderProps = {
   badge: string
@@ -15,8 +16,8 @@ type PageHeaderProps = {
 
 function PageHeader({ badge, title, description }: PageHeaderProps) {
   return (
-    <div className="text-center mb-12">
-      <Badge className="mb-4">{badge}</Badge>
+    <div className="text-center mb-16">
+      <Badge className="mb-4 px-6 py-2 text-sm font-semibold bg-gradient-to-r from-primary to-purple-500 text-primary-foreground border-transparent shadow-lg">{badge}</Badge>
       <h1 className="text-4xl font-bold text-primary dark:text-white mb-4">{title}</h1>
       <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">{description}</p>
     </div>
@@ -25,46 +26,34 @@ function PageHeader({ badge, title, description }: PageHeaderProps) {
 
 const teamMembers = [
   {
-    name: "Sarah Johnson",
-    role: "CEO & Founder",
-    bio: "Former VP of Talent at Google with 15+ years in recruitment technology.",
-    avatar: "👩‍💼"
+    name: "George Muia",
+    role: "Lead Full-Stack Engineer",
+    bio: "A forward-thinking lead developer specializing in building intelligent, cloud-native applications",
+    avatar: "/GM.JPG"
   },
   {
-    name: "Michael Chen",
-    role: "CTO",
-    bio: "Ex-Microsoft engineer specializing in AI and machine learning systems.",
-    avatar: "👨‍💻"
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "Head of Product",
-    bio: "Product leader with experience at LinkedIn and Airbnb.",
-    avatar: "👩‍🎨"
-  },
-  {
-    name: "David Kim",
-    role: "Head of Engineering",
-    bio: "Full-stack engineer with expertise in scalable platform architecture.",
-    avatar: "👨‍🔧"
+    name: "Brian Miles",
+    role: "Full-Stack Developer",
+    bio: "A versatile full-stack developer with a passion for creating seamless user experiences and robust backend systems.",
+    avatar: "/BM.JPEG"
   }
 ]
 
 const values = [
   {
-    icon: <Heart className="h-8 w-8" />,
-    title: "People First",
-    description: "We believe that behind every resume is a person with dreams, aspirations, and unique talents."
+    icon: <Users className="h-8 w-8" />,
+    title: "For Kenyans, By Kenyans",
+    description: "We are deeply committed to our local community, building a platform that understands and serves the unique needs of the Kenyan job market."
   },
   {
     icon: <Target className="h-8 w-8" />,
     title: "Quality Connections",
-    description: "We focus on meaningful matches rather than quantity, ensuring better outcomes for everyone."
+    description: "We focus on creating meaningful, long-term career matches, not just filling positions. Our goal is to foster growth for both individuals and businesses."
   },
   {
     icon: <Zap className="h-8 w-8" />,
     title: "Innovation",
-    description: "We continuously innovate to make job searching and hiring more efficient and enjoyable."
+    description: "Leveraging the latest technology, including AI, we make the hiring process smarter, faster, and more efficient for everyone involved."
   },
   {
     icon: <Globe className="h-8 w-8" />,
@@ -74,10 +63,10 @@ const values = [
 ]
 
 const stats = [
-  { number: "50K+", label: "Active Job Seekers" },
-  { number: "5K+", label: "Partner Companies" },
-  { number: "25K+", label: "Successful Matches" },
-  { number: "95%", label: "Satisfaction Rate" }
+  { number: "10K+", label: "Kenyan Job Seekers" },
+  { number: "500+", label: "Partner Companies" },
+  { number: "1K+", label: "Successful Placements" },
+  { number: "98%", label: "User Satisfaction" }
 ]
 
 export default function AboutPage() {
@@ -85,11 +74,11 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950">
       <Navbar />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <PageHeader
-          badge="About JobConnect Pro"
-          title="Revolutionizing How Talent Meets Opportunity"
-          description="Founded in 2023, JobConnect Pro was born from a simple belief: the job search process should be transparent, efficient, and human-centered. We're building the future of recruitment technology."
+          badge="For Kenyans, By Kenyans"
+          title="Connecting Kenyan Talent with Opportunity"
+          description="JobConnect Pro was founded in 2025 by the TytanTech development team to bridge the gap between Kenyan job seekers and local companies, creating a seamless platform for talent to meet opportunity without intermediaries."
         />
 
         {/* Stats Section */}
@@ -118,9 +107,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-lg text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed">
-                To create a world where finding the right job or the perfect candidate is no longer a matter of luck, 
-                but a result of intelligent matching, transparent communication, and mutual respect. We&apos;re eliminating 
-                the barriers between talent and opportunity, making career growth accessible to everyone.
+                Our mission is to empower the Kenyan workforce by creating a transparent, efficient, and accessible job market. We strive to eliminate the barriers that make job hunting difficult, ensuring that every qualified Kenyan has the opportunity to build a meaningful career right here at home.
               </p>
             </CardContent>
           </Card>
@@ -167,27 +154,35 @@ export default function AboutPage() {
               Meet Our Team
             </h2>
             <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              We&apos;re a diverse team of technologists, recruiters, and dreamers united by our passion for connecting people.
+              We&apos;re a diverse team of technologists and dreamers united by our passion for connecting people.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {teamMembers.map((member, index) => (
-              <Card key={index} className="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <div className="text-6xl mb-4">{member.avatar}</div>
-                  <CardTitle className="text-primary dark:text-white">
+              <Card key={index} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300 w-full max-w-xs sm:w-64 overflow-hidden">
+                <div className="relative w-full aspect-[4/3] -mt-6">
+                  <Image 
+                    src={member.avatar} 
+                    alt={member.name} 
+                    fill
+                    sizes="(max-width: 640px) 90vw, 256px"
+                    className="object-cover" 
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <CardTitle className="text-primary dark:text-white text-lg">
                     {member.name}
                   </CardTitle>
-                  <CardDescription className="text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {member.role}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    {member.bio}
                   </p>
-                </CardContent>
+                  <div className="mt-3">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      {member.bio}
+                    </p>
+                  </div>
+                </div>
               </Card>
             ))}
           </div>
@@ -203,26 +198,9 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent className="prose prose-lg max-w-none">
               <div className="text-slate-600 dark:text-slate-300 space-y-6">
-                <p>
-                  JobConnect Pro started in a small coffee shop in San Francisco, where our founder Sarah Johnson 
-                  was frustrated by the inefficiencies she witnessed in traditional recruitment processes. Having 
-                  spent over a decade in talent acquisition at major tech companies, she knew there had to be a better way.
-                </p>
-                <p>
-                  The idea was simple: what if job seekers could communicate directly with hiring managers? What if 
-                  the application process was transparent and respectful of everyone&apos;s time? What if technology could 
-                  truly serve both candidates and companies equally?
-                </p>
-                <p>
-                  Today, JobConnect Pro is trusted by thousands of professionals and hundreds of companies worldwide. 
-                  We&apos;ve facilitated over 25,000 successful job matches and continue to grow our community of 
-                  forward-thinking organizations and talented individuals.
-                </p>
-                <p>
-                  But we&apos;re just getting started. Our vision extends beyond job matching – we&apos;re building a platform 
-                  that supports entire career journeys, from skill development to professional networking to long-term 
-                  career planning.
-                </p>
+                <p>JobConnect Pro was born from a shared frustration. As the TytanTech development team, we saw firsthand how difficult it was for talented Kenyans to find jobs easily, and for great local companies to find the right people. The process was often slow, filled with intermediaries, and lacked transparency.</p>
+                <p>We asked ourselves: What if we could build a platform specifically for Kenyans? A place where job seekers could connect directly with employers, where skills were matched intelligently, and where the entire process was built on trust and efficiency.</p>
+                <p>In 2025, we turned that idea into a reality. JobConnect Pro is our answer. It&apos;s more than just a job board; it&apos;s a community-driven platform designed to empower our nation&apos;s workforce. We&apos;re just getting started, but our commitment is unwavering: to build a future where every Kenyan has the tools and access to achieve their career aspirations.</p>
               </div>
             </CardContent>
           </Card>

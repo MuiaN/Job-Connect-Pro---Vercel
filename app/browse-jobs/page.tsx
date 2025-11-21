@@ -185,6 +185,9 @@ export default function BrowseJobsPage() {
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-8 text-center">
+          <div className="inline-block mb-4">
+            <Badge className="bg-gradient-to-r from-primary to-purple-500 text-primary-foreground border-transparent px-6 py-2 text-sm font-semibold shadow-lg">For Kenyans, By Kenyans</Badge>
+          </div>
           <h1 className="text-4xl font-bold mb-2">Browse Jobs</h1>
           <p className="text-lg text-muted-foreground">Discover your next career opportunity from thousands of verified companies</p>
         </div>

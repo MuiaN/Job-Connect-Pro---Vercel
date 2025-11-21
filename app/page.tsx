@@ -71,13 +71,14 @@ export default function HomePage() {
         <div className="container relative z-10 py-20 md:py-0">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
+              className="flex flex-wrap justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
               <Badge 
                 className="
-                  mb-6 px-4 py-2 text-sm font-semibold border-transparent
+                  mb-4 px-4 py-2 text-sm font-semibold border-transparent
                   bg-gradient-to-r from-blue-500 to-purple-600 text-white 
                   dark:from-blue-400 dark:to-purple-500 dark:text-white
                   shadow-lg
@@ -85,6 +86,15 @@ export default function HomePage() {
               >
                 <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
                 <span>The Future of Recruitment is Here</span>
+              </Badge>
+              <Badge 
+                className="
+                  mb-4 px-6 py-2 text-sm font-semibold border-transparent
+                  bg-gradient-to-r from-primary to-purple-500 text-primary-foreground
+                  shadow-lg
+                "
+              >
+                For Kenyans, By Kenyans
               </Badge>
             </motion.div>
             
