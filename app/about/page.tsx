@@ -82,19 +82,29 @@ export default function AboutPage() {
         />
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {stats.map((stat, index) => (
-            <Card key={index} className="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary dark:text-white mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  {stat.label}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-primary dark:text-white mb-4">
+              Our Goals for 2026
+            </h2>
+            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+              As we build our platform, we are setting ambitious targets. Here is the impact we aim to achieve by the end of 2026.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <Card key={index} className="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200 dark:border-slate-700">
+                <CardContent className="pt-6">
+                  <div className="text-3xl font-bold text-primary dark:text-white mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-300">
+                    {stat.label}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Mission Section */}
