@@ -1,4 +1,4 @@
-import { generateObject } from 'ai';
+import { streamObject } from 'ai';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -6,8 +6,8 @@ import { gemini } from '@/lib/ai/gemini';
 import { prisma } from '@/lib/prisma';
 
 const searchCriteriaSchema = z.object({
-  keywords: z.array(z.string()).optional().describe("An array of relevant keywords extracted from the query, including job titles, technologies, and concepts. e.g., ['React', 'frontend', 'engineer']."),
-  skills: z.array(z.string()).optional().describe("A list of specific skills to filter by, extracted from the query and matched against the available skills list."),
+  keywords: z.array(z.string()).max(5).optional().describe("An array of up to 5 relevant keywords extracted from the query, including job titles, technologies, and concepts. e.g., ['React', 'frontend', 'engineer']."),
+  skills: z.array(z.string()).max(5).optional().describe("A list of up to 5 specific skills to filter by, extracted from the query and matched against the available skills list."),
   location: z.string().optional().describe("A string representing the desired job location (e.g., 'New York, NY')."),
   experienceLevels: z.array(z.enum(["ENTRY", "JUNIOR", "MID", "SENIOR", "LEAD", "EXECUTIVE"])).optional().describe("A list of experience levels to filter by. Map terms like '5+ years' or 'senior' to these."),
   employmentTypes: z.array(z.enum(["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"])).optional().describe("A list of employment types to filter by."),
@@ -16,7 +16,7 @@ const searchCriteriaSchema = z.object({
   remotePreference: z.array(z.enum(["REMOTE", "ONSITE", "HYBRID"])).optional().describe("Job's work location preference."),
 }).describe("The structured search criteria extracted from the user's query for jobs.");
 
-const getSystemInstruction = (skillNames: string[]) => `You are an expert job search assistant. Your task is to analyze a user's natural language query and convert it into a structured JSON object for a database search. You must search through the job title, description, requirements, and benefits.
+const systemInstruction = `You are an expert job search assistant. Your task is to analyze a user's natural language query and convert it into a structured JSON object for a database search. You must search through the job title, description, requirements, and benefits.
 
 1.  **Analyze the user's query**: Identify key concepts, job titles, technologies, locations, experience levels, and employment types.
 2.  **Expand Keywords**: For the 'keywords' field, break down the query into individual, meaningful terms. For example, if the user searches for "senior software engineer", you should generate keywords like ["senior", "software", "engineer", "developer", "backend", "frontend"]. This ensures a wider net is cast across multiple fields like title and description.
@@ -24,7 +24,8 @@ const getSystemInstruction = (skillNames: string[]) => `You are an expert job se
     - For the \`skills\` array, only include terms that are an exact match from the available skills list.
     - Also, infer skills from the job title, description, and requirements. For example, a "React Native developer" query implies the "React Native" skill.
     - For \`experienceLevels\`, map terms like "5+ years" or "lead" to the appropriate enum values.
-4.  **Return ONLY JSON**: Your final output must be only a valid JSON object with no extra text or explanations.
+4.  **Constraints**: Limit the 'keywords' and 'skills' arrays to a maximum of 5 items each.
+5.  **Return ONLY JSON**: Your final output must be only a valid JSON object with no extra text or explanations.
 
 Analyze the user's query and return ONLY a valid JSON object with the extracted fields. If a field is not mentioned, omit it from the JSON.
 
@@ -43,9 +44,7 @@ Example JSON Output:
   "keywords": ["data science", "data scientist", "intern", "internship", "machine learning"],
   "location": "SF",
   "employmentTypes": ["INTERNSHIP"]
-}
-
-**Available skills for the 'skills' array**: ${skillNames.join(', ')}.`;
+}`;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -56,31 +55,42 @@ export async function GET(request: Request) {
   }
 
   try {
-    const allSkills = await prisma.skill.findMany({ select: { name: true } });
-    const skillNames = allSkills.map(s => s.name);
-
-    const { object: searchCriteria } = await generateObject({
+    const { partialObjectStream } = await streamObject({
       model: gemini,
       schema: searchCriteriaSchema,
       prompt: query,
-      system: getSystemInstruction(skillNames),
+      system: systemInstruction,
     });
+
+    let searchCriteria: z.infer<typeof searchCriteriaSchema> = {};
+
+    // Iterate through the stream to get the final object
+    for await (const partialObject of partialObjectStream) {
+      searchCriteria = partialObject as z.infer<typeof searchCriteriaSchema>;
+    }
 
     const where: any = {
       status: 'ACTIVE',
       AND: [],
     };
 
+    // Ensure we only get jobs that are not past their deadline
+    where.AND.push({
+      OR: [
+        { applicationDeadline: { gte: new Date() } },
+        { applicationDeadline: null },
+      ],
+    });
+
     if (searchCriteria.skills && searchCriteria.skills.length > 0) {
-      where.AND.push({
+      const skillConditions = searchCriteria.skills.map(skill => ({
         skills: {
           some: {
-            skill: {
-              name: { in: searchCriteria.skills, mode: 'insensitive' }
-            }
+            skill: { name: { contains: skill, mode: 'insensitive' } }
           }
         }
-      });
+      }));
+      where.AND.push(...skillConditions);
     }
 
     if (searchCriteria.keywords && searchCriteria.keywords.length > 0) {
@@ -134,6 +144,7 @@ export async function GET(request: Request) {
           select: {
             name: true,
             logoUrl: true,
+            industry: true,
           },
         },
         skills: {

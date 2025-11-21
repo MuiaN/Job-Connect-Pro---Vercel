@@ -11,7 +11,7 @@ import {
 import type { Company, Job, Skill } from "@prisma/client"
 
 type JobWithCompanyAndSkills = Job & {
-  company: Pick<Company, 'name' | 'logoUrl'>;
+  company: Pick<Company, 'name' | 'logoUrl' | 'industry'>;
   skills: { skill: Pick<Skill, 'id' | 'name'> }[];
 };
 
