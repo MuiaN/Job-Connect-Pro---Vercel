@@ -2,7 +2,7 @@
 
 import { UserRole } from "@prisma/client"
 import { motion } from "framer-motion"
-import { Building2, Briefcase, Calendar, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Search, User, Users, X } from "lucide-react"
+import { Building2, LayoutDashboard, LogOut, Menu, MessageSquare, Search, User, Users, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
@@ -35,31 +35,7 @@ export function Navbar() {
     { href: "/browse-jobs", label: "Browse Jobs", icon: Search },
     { href: "/about", label: "About", icon: Building2 },
     { href: "/contact", label: "Contact", icon: MessageSquare },
-  ]
-
-  const dashboardItems = [
-    {
-      label: "Job Seeker Dashboard",
-      items: [
-        { href: "/dashboard/job-seeker", label: "Dashboard", icon: User },
-        { href: "/dashboard/job-seeker/profile", label: "Profile", icon: User },
-        { href: "/dashboard/job-seeker/applications", label: "Applications", icon: FileText },
-        { href: "/dashboard/job-seeker/interviews", label: "Interviews", icon: Calendar },
-        { href: "/dashboard/job-seeker/messages", label: "Messages", icon: MessageSquare },
-      ]
-    },
-    {
-      label: "Company Dashboard",
-      items: [
-        { href: "/dashboard/company", label: "Dashboard", icon: Building2 },
-        { href: "/dashboard/company/profile", label: "Company Profile", icon: Building2 },
-        { href: "/dashboard/company/jobs", label: "Job Listings", icon: Briefcase },
-        { href: "/dashboard/company/jobs/new", label: "Post New Job", icon: Briefcase },
-        { href: "/dashboard/company/messages", label: "Messages", icon: MessageSquare },
-        { href: "/dashboard/company/interviews", label: "Interviews", icon: Calendar },
-      ]
-    }
-  ]
+  ]  
 
   function isActive(href: string) {
     if (!pathname) return false
@@ -232,30 +208,6 @@ export function Navbar() {
                 </Link>
               ))}
             </div>
-
-            {/* Dashboard Links */}
-            {dashboardItems.map((section, index) => (
-              <div key={index} className="space-y-2">
-                <div className="text-sm font-semibold text-muted-foreground border-t border-border/40 pt-4">
-                  {section.label}
-                </div>
-                {section.items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={isActive(item.href) ? 'page' : undefined}
-                    className={cn(
-                      "flex items-center space-x-2 text-sm transition-colors py-1 pl-4",
-                      isActive(item.href) ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'
-                    )}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-            ))}
 
             {/* Mobile Auth Buttons / User Info */}
             {user ? (
