@@ -1,17 +1,19 @@
 "use client"
 
-import { ArrowRight, Calendar, CheckCircle, MessageSquare, Search, Shield, Sparkles, Star, Users, Zap } from "lucide-react"
+import { motion } from "framer-motion"
+import { ArrowRight, Briefcase, Building2, Calendar, CheckCircle, FileText, MessageSquare, Search, Shield, Sparkles, Star, User, UserCheck, Zap } from "lucide-react"
 import Link from "next/link"
 
+import { Footer } from "@/components/footer/footer"
 import { Navbar } from "@/components/navigation/navbar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-const features = [
+const seekerJourney = [
   {
-    icon: MessageSquare,
-    title: "Direct Communication",
+    icon: User,
+    title: "Create Your Profile",
     description: "Connect directly with hiring managers and candidates without intermediaries."
   },
   {
@@ -20,8 +22,8 @@ const features = [
     description: "AI-powered interview scheduling that works with everyone's calendar."
   },
   {
-    icon: Zap,
-    title: "Instant Matching",
+    icon: FileText,
+    title: "Apply with Confidence",
     description: "Get matched with relevant opportunities in real-time using advanced algorithms."
   },
   {
@@ -30,13 +32,31 @@ const features = [
     description: "All companies and candidates are verified for authenticity and quality."
   },
   {
-    icon: Star,
-    title: "Premium Experience",
+    icon: Star, // Placeholder, consider a more specific icon
+    title: "Land Your Dream Job",
     description: "Enjoy a premium, ad-free experience focused on meaningful connections."
+  }
+];
+
+const companyJourney = [
+  {
+    icon: Building2,
+    title: "Build Your Company Brand",
+    description: "Create a compelling company profile to attract top-tier candidates."
   },
   {
-    icon: CheckCircle,
-    title: "Success Tracking",
+    icon: Briefcase,
+    title: "Post & Manage Jobs",
+    description: "Easily post job listings and manage your entire hiring pipeline from one dashboard."
+  },
+  {
+    icon: UserCheck,
+    title: "Discover & Vet Talent",
+    description: "Use our powerful search to find qualified candidates and review their detailed profiles."
+  },
+  {
+    icon: CheckCircle, // Placeholder
+    title: "Hire the Perfect Fit",
     description: "Track your application progress and get insights to improve your success rate."
   }
 ];
@@ -47,71 +67,116 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="container relative z-10">
+      <section className="relative flex items-center justify-center min-h-[calc(100vh-4rem)] overflow-hidden">
+        <div className="container relative z-10 py-20 md:py-0">
           <div className="text-center max-w-4xl mx-auto">
-            <Badge variant="outline" className="mb-6 px-4 py-2 text-sm font-medium bg-primary/10 text-primary border-primary/20">
-              <Sparkles className="w-4 h-4 mr-2" />
-              The Future of Job Matching
-            </Badge>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Badge 
+                className="
+                  mb-6 px-4 py-2 text-sm font-semibold border-transparent
+                  bg-gradient-to-r from-blue-500 to-purple-600 text-white 
+                  dark:from-blue-400 dark:to-purple-500 dark:text-white
+                  shadow-lg
+                "
+              >
+                <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
+                <span>The Future of Recruitment is Here</span>
+              </Badge>
+            </motion.div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-primary dark:text-white leading-tight">
-              Connect Talent with
-              <span className="block text-primary">
-                Opportunity
-              </span>
-            </h1>
+            <motion.h1 
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-foreground leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Connect Talent with <span className="text-primary">Opportunity</span>
+            </motion.h1>
             
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            <motion.p 
+              className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               The premier platform connecting job seekers with companies for direct communication and seamless interview scheduling.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg text-lg px-8 py-6">
-                <Link href="/signup">
-                  Start Your Journey
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Button size="lg" asChild className="btn-gradient text-lg px-8 py-6">
+                <Link href="/signup">Start Your Journey <ArrowRight className="ml-2 w-5 h-5" /></Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6 border-border/50 hover:bg-accent/50">
-                <Link href="/jobs">
-                  Browse Jobs
-                  <Search className="ml-2 w-5 h-5" />
-                </Link>
+                <Link href="/browse-jobs">Browse Jobs <Search className="ml-2 w-5 h-5" /></Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 dark:from-slate-800 dark:via-blue-900 dark:to-purple-900">
+      {/* How It Works Section */}
+      <section className="py-20">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-              Why Choose JobConnect Pro?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Experience the next generation of job matching with our innovative features designed for modern professionals.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">How It Works</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">A streamlined process for both sides of the hiring equation.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="modern-card group hover:scale-105 transition-all duration-300">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            {/* For Job Seekers */}
+            <div className="space-y-8">
+              <h3 className="text-2xl font-semibold text-center text-primary flex items-center justify-center gap-2"><User className="w-6 h-6" /> For Job Seekers</h3>
+              {seekerJourney.map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Card className="modern-card">
+                    <CardHeader className="flex flex-row items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <step.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl">{step.title}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* For Companies */}
+            <div className="space-y-8 lg:mt-16">
+              <h3 className="text-2xl font-semibold text-center text-primary flex items-center justify-center gap-2"><Building2 className="w-6 h-6" /> For Companies</h3>
+              {companyJourney.map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Card className="modern-card">
+                    <CardHeader className="flex flex-row items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <step.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl">{step.title}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -119,16 +184,16 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="container">
-          <Card className="modern-card text-center p-12 bg-gradient-to-r from-blue-100 via-purple-100 to-indigo-100 dark:from-slate-700 dark:via-blue-800 dark:to-purple-800 border-blue-200 dark:border-slate-600">
+          <Card className="modern-card text-center p-8 md:p-12 bg-gradient-to-r from-primary/10 to-purple-500/10 dark:from-primary/20 dark:to-purple-500/20 border-primary/20">
             <CardContent className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                Ready to Transform Your Career?
+                Ready to Transform Your Career or Company?
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join thousands of professionals who have found their dream jobs through JobConnect Pro.
+                Join thousands of professionals and companies who have found their perfect match on JobConnect Pro.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
+                <Button size="lg" asChild className="btn-gradient">
                   <Link href="/signup">
                     Get Started Free
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -145,25 +210,50 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border/40 py-12 bg-muted/20">
+      {/* Platform Features Section */}
+      <section className="py-20">
         <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
-                <Users className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold text-foreground">
-                JobConnect Pro
-              </span>
-            </div>
-            <div className="text-center md:text-right">
-              <p className="text-muted-foreground">&copy; 2024 JobConnect Pro. All rights reserved.</p>
-              <p className="text-sm text-muted-foreground/80 mt-1">Connecting talent with opportunity.</p>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">A Platform Built for Growth</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Powerful tools designed for a seamless recruitment experience.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: MessageSquare, title: "Direct Messaging", description: "Connect directly with hiring managers and candidates without intermediaries." },
+              { icon: Calendar, title: "Smart Scheduling", description: "AI-powered interview scheduling that works with everyone's calendar." },
+              { icon: Zap, title: "Instant Matching", description: "Get matched with relevant opportunities in real-time using advanced algorithms." },
+              { icon: Shield, title: "Verified Profiles", description: "All companies and candidates are verified for authenticity and quality." },
+              { icon: Star, title: "Premium Experience", description: "Enjoy a premium, ad-free experience focused on meaningful connections." },
+              { icon: CheckCircle, title: "Success Tracking", description: "Track your application progress and get insights to improve your success rate." }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+              >
+                <Card className="modern-card h-full group hover:-translate-y-2 transition-transform duration-300">
+                  <CardHeader>
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                      <feature.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base">{feature.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

@@ -1,13 +1,30 @@
 "use client"
 
-import { Building2, Briefcase, Calendar, FileText, Menu, MessageSquare, Search, User, Users, X } from "lucide-react"
+import { UserRole } from "@prisma/client"
+import { motion } from "framer-motion"
+import { Building2, Briefcase, Calendar, FileText, LayoutDashboard, LogOut, Menu, MessageSquare, Search, User, Users, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useSession, signOut } from "next-auth/react"
+import { useEffect, useState } from "react"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { cn } from "@/lib/utils"
+interface NavProfile {
+  image?: string | null;
+  logoUrl?: string | null;
+}
 
 export function Navbar() {
   const pathname = usePathname()
@@ -50,6 +67,45 @@ export function Navbar() {
     return pathname.startsWith(href)
   }
 
+  const { data: session, status } = useSession()
+  const user = session?.user
+  const userRole = user?.role as UserRole // Assuming role is in the session
+
+  const [profile, setProfile] = useState<NavProfile | null>(null);
+
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      const fetchNavProfile = async () => {
+        try {
+          if (userRole === 'COMPANY') {
+            const response = await fetch('/api/profile/company');
+            if (response.ok) {
+              const data = await response.json();
+              setProfile(data); // Contains logoUrl
+            }
+          } else if (userRole === 'JOB_SEEKER') {
+            const response = await fetch('/api/dashboard/job-seeker');
+            if (response.ok) {
+              const data = await response.json();
+              setProfile({ image: data.profile?.image }); // Contains image
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch profile for navbar:", error);
+        }
+      };
+      fetchNavProfile();
+    }
+  }, [status, user, userRole]);
+
+  const dashboardUrl = userRole === 'COMPANY' ? '/dashboard/company' : '/dashboard/job-seeker'
+  const profileUrl = userRole === 'COMPANY' ? '/dashboard/company/profile' : '/dashboard/job-seeker/profile'
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
+
   return (
     <nav className="sticky top-0 z-50 w-full nav-glass">
       <div className="container flex h-16 items-center justify-between">
@@ -87,15 +143,58 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           <ThemeToggle />
           
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-2">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/signin">Sign In</Link>
-            </Button>
-            <Button size="sm" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
+          {status === 'loading' ? (
+            <div className="hidden md:block w-20 h-8 bg-muted/50 rounded-md animate-pulse" />
+          ) : user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                    <Avatar className="h-9 w-9 border-2 border-transparent dark:border-border/50 shadow-md">
+                      <AvatarImage src={userRole === 'COMPANY' ? profile?.logoUrl ?? undefined : profile?.image ?? user.image ?? undefined} alt={user.name ?? "User"} />
+                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold">
+                        {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </motion.div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 glass-strong border-border/50" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                    <Badge 
+                      className={`w-fit mt-1 text-xs border-transparent ${
+                        userRole === "JOB_SEEKER"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300"
+                          : "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300"
+                      }`}
+                    >
+                      {userRole === "JOB_SEEKER" ? "Job Seeker" : "Company"}
+                    </Badge>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href={dashboardUrl} className="cursor-pointer"><LayoutDashboard className="mr-2 h-4 w-4" /><span>Back to Dashboard</span></Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={profileUrl}><User className="mr-2 h-4 w-4" /><span>Profile</span></Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/20">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="hidden md:flex items-center space-x-2">
+              <Button variant="ghost" size="sm" asChild><Link href="/signin">Sign In</Link></Button>
+              <Button size="sm" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"><Link href="/signup">Get Started</Link></Button>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <Button
@@ -158,15 +257,27 @@ export function Navbar() {
               </div>
             ))}
 
-            {/* Mobile Auth Buttons */}
-            <div className="flex flex-col space-y-2 pt-4 border-t border-border/40">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
-              </Button>
-              <Button size="sm" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg">
-                <Link href="/signup" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
-              </Button>
-            </div>
+            {/* Mobile Auth Buttons / User Info */}
+            {user ? (
+              <div className="pt-4 border-t border-border/40">
+                <div className="flex items-center px-4 mb-3">
+                  <Avatar className="h-8 w-8 mr-2">
+                    <AvatarImage src={userRole === 'COMPANY' ? profile?.logoUrl ?? undefined : profile?.image ?? user.image ?? undefined} alt={user.name ?? "User"} />
+                    <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => signOut({ callbackUrl: '/' })}><LogOut className="mr-2 h-4 w-4" /><span>Log out</span></Button>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-2 pt-4 border-t border-border/40">
+                <Button variant="ghost" size="sm" asChild><Link href="/signin">Sign In</Link></Button>
+                <Button size="sm" asChild className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"><Link href="/signup">Get Started</Link></Button>
+              </div>
+            )}
           </div>
         </div>
       )}

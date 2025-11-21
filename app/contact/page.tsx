@@ -3,6 +3,7 @@
 import { Headphones, Mail, MapPin, MessageSquare, Phone, Send, Users } from 'lucide-react'
 import { useState } from 'react'
 
+import { Footer } from '@/components/footer/footer'
 import { Navbar } from '@/components/navigation/navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -384,6 +385,8 @@ export default function ContactPage() {
           </Card>
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

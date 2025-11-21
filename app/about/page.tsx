@@ -2,6 +2,7 @@
 
 import { Globe, Heart, Target, Zap } from 'lucide-react'
 
+import { Footer } from '@/components/footer/footer'
 import { Navbar } from '@/components/navigation/navbar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -250,6 +251,8 @@ export default function AboutPage() {
           </Card>
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

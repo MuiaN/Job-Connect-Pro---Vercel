@@ -2,6 +2,7 @@
 
 import { Search, MapPin, DollarSign, Briefcase } from "lucide-react"
 
+import { Footer } from "@/components/footer/footer"
 import { Navbar } from "@/components/navigation/navbar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -147,24 +148,7 @@ export default function BrowseJobsPage() {
       </main>
 
       {/* Footer - match homepage footer */}
-      <footer className="border-t border-border/40 py-12 bg-muted/20">
-        <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
-                <svg className="w-5 h-5 text-primary-foreground" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C9.243 2 7 4.243 7 7C7 8.657 7.686 10.128 8.757 11.071C6.934 12.215 5.5 14.335 5.5 17H7.5C7.5 14.687 8.827 12.7 10.9 11.95C11.29 12.34 11.87 12.61 12.5 12.61C13.717 12.61 14.73 11.737 15.102 10.6C16.467 10.916 17.7 11.5 18.75 12.297C19.96 13.2 20.75 14.657 20.75 16.25V18H22.75V16.25C22.75 12.898 19.592 10 15.5 10C14.846 10 14.213 10.071 13.6 10.21C13.822 9.486 14 8.74 14 8C14 5.243 11.757 3 9 3H8C6.343 3 5 4.343 5 6V7C5 9.757 7.243 12 10 12C10.552 12 11.074 11.89 11.557 11.69C11.19 12.252 10.5 12.61 9.7 12.61C7.636 12.61 6 14.246 6 16.31V18H18V16.31C18 14.246 16.364 12.61 14.3 12.61C13.5 12.61 12.81 12.252 12.443 11.69C12.926 11.89 13.448 12 14 12C16.757 12 19 9.757 19 7V6C19 4.343 17.657 3 16 3H15C12.243 3 10 5.243 10 8C10 8.74 10.178 9.486 10.4 10.21C9.787 10.071 9.154 10 8.5 10C4.408 10 1.25 12.898 1.25 16.25V18H3.25V16.25C3.25 14.657 4.04 13.2 5.25 12.297C6.3 11.5 7.533 10.916 8.898 10.6C9.27 11.737 10.283 12.61 11.5 12.61C12.13 12.61 12.71 12.34 13.1 11.95C15.173 12.7 16.5 14.687 16.5 17H18.5C18.5 14.335 17.066 12.215 15.243 11.071C16.314 10.128 17 8.657 17 7C17 4.243 14.757 2 12 2Z"/></svg>
-              </div>
-              <span className="text-xl font-bold text-foreground">
-                JobConnect Pro
-              </span>
-            </div>
-            <div className="text-center md:text-right">
-              <p className="text-muted-foreground">&copy; 2024 JobConnect Pro. All rights reserved.</p>
-              <p className="text-sm text-muted-foreground/80 mt-1">Connecting talent with opportunity.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
