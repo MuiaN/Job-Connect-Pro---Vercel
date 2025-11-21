@@ -35,7 +35,7 @@ const teamMembers = [
     name: "Brian Miles",
     role: "Full-Stack Developer",
     bio: "A versatile full-stack developer with a passion for creating seamless user experiences and robust backend systems.",
-    avatar: "/BM.JPEG"
+    avatar: "/BM.jpeg"
   }
 ]
 
